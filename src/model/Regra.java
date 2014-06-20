@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Regra {
@@ -8,7 +9,10 @@ public class Regra {
 	private List<Sentenca> premissas;
 	private List<Sentenca> conclusoes;
 	
-	public Regra() {
+	public Regra(String descricao) {
+		this.descricao = descricao;
+		this.premissas = new ArrayList<Sentenca>();
+		this.conclusoes = new ArrayList<Sentenca>();
 	}
 
 	public String getDescricao() {

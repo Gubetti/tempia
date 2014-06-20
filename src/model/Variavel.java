@@ -1,26 +1,58 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Variavel {
 
 	private String nome;
 	private String pergunta;
 	private boolean objetivo;
 	private TipoVariavel tipo;
-	private String[][] valores;
-	public final String TRUE = "true";
-	public final String FALSE = "false";
+	private List<Operador> operadores;
+	private List<RespostaVariavel> respostas;
 	
-	public Variavel(String nome, boolean objetivo, TipoVariavel tipo, String[][] valores) {
+	
+	public Variavel(String nome, boolean objetivo, TipoVariavel tipo) {
 		this.nome = nome;
 		this.objetivo = objetivo;
 		this.tipo = tipo;
-		this.valores = valores;
+		inserirOperadores();
+		this.respostas = new ArrayList<RespostaVariavel>();
 	}
 
-	public void inserirValor(String valor) {
-		for(int i = 0; i < valores.length; i++) {
-			
+	private void inserirOperadores() {
+		this.operadores = new ArrayList<>();
+		
+		operadores.add(Operador.IGUAL);
+		operadores.add(Operador.DIFERENTE);
+
+		if (tipo == TipoVariavel.NUMERICO) {
+			operadores.add(Operador.MAIOR_IGUAL);
+			operadores.add(Operador.MAIOR_QUE);
+			operadores.add(Operador.MENOR_IGUAL);
+			operadores.add(Operador.MENOR_QUE);
 		}
+	}
+	
+	public boolean inserirValor(String valor) {
+		for(RespostaVariavel respostaVariavel : respostas) {
+			if(respostaVariavel.getValor().equalsIgnoreCase(valor)) {
+				return false;
+			}
+		}
+		respostas.add(new RespostaVariavel(valor));
+		return true;
+	}
+	
+	public void removerValor(String valor) {
+		for(RespostaVariavel respostaVariavel : respostas) {
+			if(respostaVariavel.getValor().equalsIgnoreCase(valor)) {
+				respostas.remove(respostaVariavel);
+				break;
+			}
+		}
+		//verificar sentenças
 	}
 	
 	public String getNome() {
@@ -52,14 +84,31 @@ public class Variavel {
 	}
 	
 	public void setTipo(TipoVariavel tipo) {
+		if(tipo == TipoVariavel.MULTIVALORADO) {
+			if(this.tipo == TipoVariavel.NUMERICO) {
+				this.respostas = new ArrayList<RespostaVariavel>();
+			}
+		} else {
+			this.respostas = new ArrayList<RespostaVariavel>();			
+		}
+		//verificar sentenças
 		this.tipo = tipo;
+		inserirOperadores();
 	}
-	
-	public String[][] getValores() {
-		return valores;
+
+	public List<Operador> getOperadores() {
+		return operadores;
 	}
-	
-	public void setValores(String[][] valores) {
-		this.valores = valores;
+
+	public void setOperadores(List<Operador> operadores) {
+		this.operadores = operadores;
+	}
+
+	public List<RespostaVariavel> getRespostas() {
+		return respostas;
+	}
+
+	public void setRespostas(List<RespostaVariavel> respostas) {
+		this.respostas = respostas;
 	}
 }

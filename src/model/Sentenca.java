@@ -1,31 +1,19 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class Sentenca {
 
 	private Variavel variavel;
+	private String valorSelecao;
 	private Operador operadorSelecionado;
-	private List<Operador> operadores;
 
 	public Sentenca(Variavel variavel) {
 		this.variavel = variavel;
-		inserirOperadores();
 	}
-
-	public void inserirOperadores() {
-		this.operadores = new ArrayList<>();
-		
-		operadores.add(Operador.IGUAL);
-		operadores.add(Operador.DIFERENTE);
-
-		if (variavel.getTipo() == TipoVariavel.NUMERICO) {
-			operadores.add(Operador.MAIOR_IGUAL);
-			operadores.add(Operador.MAIOR_QUE);
-			operadores.add(Operador.MENOR_IGUAL);
-			operadores.add(Operador.MENOR_QUE);
-		}
+	
+	public void gravar(String valorSelecao, Operador operadorSelecionado) {
+		this.valorSelecao = valorSelecao;
+		this.operadorSelecionado = operadorSelecionado;
 	}
 	
 	public Variavel getVariavel() {
@@ -36,19 +24,19 @@ public class Sentenca {
 		this.variavel = variavel;
 	}
 
+	public String getValorSelecao() {
+		return valorSelecao;
+	}
+
+	public void setValorSelecao(String valorSelecao) {
+		this.valorSelecao = valorSelecao;
+	}
+
 	public Operador getOperadorSelecionado() {
 		return operadorSelecionado;
 	}
 
 	public void setOperadorSelecionado(Operador operadorSelecionado) {
 		this.operadorSelecionado = operadorSelecionado;
-	}
-
-	public List<Operador> getOperadores() {
-		return operadores;
-	}
-
-	public void setOperadores(List<Operador> operadores) {
-		this.operadores = operadores;
 	}
 }
