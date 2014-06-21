@@ -1,0 +1,197 @@
+package view;
+
+import javax.swing.JDialog;
+
+import model.Sentenca;
+import model.TipoVariavel;
+import model.Variavel;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+
+@SuppressWarnings("serial")
+public class TelaPerguntas extends JDialog {
+	private JTextField textField;
+
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					TelaPerguntas dialog = new TelaPerguntas(
+							new Sentenca(new Variavel("Teste", false,
+									TipoVariavel.NUMERICO)));
+					dialog.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Create the dialog.
+	 */
+	public TelaPerguntas(Sentenca premissa) {
+		//Title com nome da regra
+		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		// alterar para a linha de baixo depois, evita que o usuario feche essa janela.
+		// this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		this.setResizable(false);
+		getContentPane().setLayout(null);
+		
+		int larguraMaxima = 500 - 8;
+		int alturaPanelPergunta = 50;
+//		int qtdRespostas = premissa.getVariavel().getRespostas().size();
+		int qtdRespostas = 5; // linha temporaria, descomentar a linha acima e apagar essa
+		int espacamentoRespostas = 1;
+		int alturaRespIndividual = 23;
+		int borda = 40;
+		int alturaPanelRespostas = espacamentoRespostas + (qtdRespostas * espacamentoRespostas) + (qtdRespostas * alturaRespIndividual) + borda - (borda / 3);
+		int yRespostas = espacamentoRespostas + alturaRespIndividual;
+		int alturaPanelBotoes = 60;
+		int yPanelBotoes = alturaPanelPergunta + alturaPanelRespostas;
+		int alturaBotao = 23;
+		int larguraBotao = 89;
+		int xBotaoOk = (larguraMaxima - larguraBotao) / 2;
+		int yBotaoOk = (alturaPanelBotoes - alturaBotao) / 2;
+		int espacamentoValor = 15;
+		int alturaLblValor = 14;
+		int larguraLblValor = 33;
+		int alturaTfValor = 20;
+		int larguraTfValor = 86;
+		int larguraSlider = 200;
+		int xLblValor = (larguraMaxima - (larguraLblValor + larguraTfValor) - espacamentoValor) / 2;
+		int xTfValor = xLblValor + espacamentoValor + larguraLblValor;
+		int alturaSlider = 25;
+		int xSlider = (larguraMaxima - larguraSlider) / 2;
+		int yLblValor = (alturaPanelRespostas - (alturaSlider + alturaLblValor) - espacamentoValor) / 2;
+		int yTfValor = (alturaPanelRespostas - (alturaSlider + alturaTfValor) - espacamentoValor) / 2;
+		int ySlider = yLblValor + espacamentoValor + alturaLblValor;
+		
+		JPanel panelPergunta = new JPanel();
+		panelPergunta.setBounds(0, 0, larguraMaxima, alturaPanelPergunta);
+		getContentPane().add(panelPergunta);
+		panelPergunta.setLayout(null);
+		
+		JLabel lblPerguntaPersonalizada = new JLabel();
+		lblPerguntaPersonalizada.setFont(new Font("SansSerif", Font.BOLD, 16));
+		lblPerguntaPersonalizada.setBounds(10, 10, 10, 10);
+//		if (premissa.getVariavel().getPergunta().equalsIgnoreCase("")) {
+			lblPerguntaPersonalizada.setText("Qual o valor de " + premissa.getVariavel().getNome() + "?");
+//		} else {
+//			lblPerguntaPersonalizada.setText(premissa.getVariavel().getPergunta());
+//		}
+		lblPerguntaPersonalizada.setSize(lblPerguntaPersonalizada.getPreferredSize());
+		int xPerguntaPersonalizada = (larguraMaxima - lblPerguntaPersonalizada.getSize().width) / 2;
+		int yPerguntaPersonalizada = (alturaPanelPergunta - lblPerguntaPersonalizada.getSize().height) / 2;
+		lblPerguntaPersonalizada.setLocation(xPerguntaPersonalizada, yPerguntaPersonalizada);
+		panelPergunta.add(lblPerguntaPersonalizada);
+		
+		JPanel panelRespostas = new JPanel();
+		panelRespostas.setBounds(0, alturaPanelPergunta, larguraMaxima, alturaPanelRespostas);
+		getContentPane().add(panelRespostas);
+		panelRespostas.setLayout(null);
+						
+		JPanel panelBotoes = new JPanel();
+		panelBotoes.setBounds(0, yPanelBotoes, larguraMaxima, alturaPanelBotoes);
+		getContentPane().add(panelBotoes);
+		panelBotoes.setLayout(null);
+		
+		JButton btnOk = new JButton("Ok");
+		btnOk.setBounds(xBotaoOk, yBotaoOk, larguraBotao, alturaBotao);
+		panelBotoes.add(btnOk);
+		
+		
+		int alturaMaxima = alturaPanelPergunta + alturaPanelRespostas + alturaPanelBotoes;
+		this.setBounds(100, 100, larguraMaxima + 8, alturaMaxima + 35);
+		
+		List<JRadioButton> jRadioList = new ArrayList<JRadioButton>();
+		List<JCheckBox> jCheckBoxList = new ArrayList<JCheckBox>();
+		ButtonGroup buttonGroup = new ButtonGroup();
+		//comentar/deletar os "fores"(for) abaixo quando descomentar os conteudos do switch logo mais abaixo
+		//UNIVALODARO
+//		for (int i = 0; i < qtdRespostas; i++) {
+//			jRadioList.add(new JRadioButton("Radio " + i));
+//			jRadioList.get(i).setBounds(10, (yRespostas * i) + (borda / 2), 109, alturaRespIndividual);
+//			jRadioList.get(i).setSize(jRadioList.get(i).getPreferredSize());
+//			panelRespostas.add(jRadioList.get(i));
+//			buttonGroup.add(jRadioList.get(i));
+//		}
+		//MULTIVALORADO
+//		for (int i = 0; i < qtdRespostas; i++) {
+//			jCheckBoxList.add(new JCheckBox("Check " + i));
+//			jCheckBoxList.get(i).setBounds(10, (yRespostas * i) + (borda / 2), 109, alturaRespIndividual);
+//			jCheckBoxList.get(i).setSize(jCheckBoxList.get(i).getPreferredSize());
+//			panelRespostas.add(jCheckBoxList.get(i));
+//		}
+		
+		switch (premissa.getVariavel().getTipo()) {
+		case UNIVALORADO:
+			//descomentar quando estiver chamando pelo executar do motor
+//			for (int i = 0; i < qtdRespostas; i++) {
+//				jRadioList.add(new JRadioButton(premissa.getVariavel().getRespostas().get(i).getValor()));
+//				jRadioList.get(i).setBounds(10, (yRespostas * i) + (borda / 2), 109, alturaRespIndividual);
+//				jRadioList.get(i).setSize(jRadioList.get(i).getPreferredSize());
+//				panelRespostas.add(jRadioList.get(i));
+//				buttonGroup.add(jRadioList.get(i));
+//			}
+			panelRespostas.setBorder(BorderFactory.createTitledBorder("Opções"));
+			break;
+		case MULTIVALORADO:
+			//descomentar quando estiver chamando pelo executar do motor
+//			for (int i = 0; i < qtdRespostas; i++) {
+//				jCheckBoxList.add(new JCheckBox(premissa.getVariavel().getRespostas().get(i).getValor()));
+//				jCheckBoxList.get(i).setBounds(10, (yRespostas * i) + (borda / 2), 109, alturaRespIndividual);
+//				jCheckBoxList.get(i).setSize(jCheckBoxList.get(i).getPreferredSize());
+//				panelRespostas.add(jCheckBoxList.get(i));
+//			}
+			panelRespostas.setBorder(BorderFactory.createTitledBorder("Opções"));
+			break;
+		case NUMERICO:
+			JLabel lblValor = new JLabel("Valor");
+			lblValor.setFont(new Font("SansSerif", Font.PLAIN, 14));
+			lblValor.setBounds(xLblValor, yLblValor, larguraLblValor, alturaLblValor);
+			panelRespostas.add(lblValor);
+			
+			textField = new JTextField();
+			textField.setBounds(xTfValor, yTfValor, larguraTfValor, alturaTfValor);
+			panelRespostas.add(textField);
+			textField.setColumns(10);			
+
+			final JSlider slider = new JSlider();
+			slider.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent arg0) {
+					textField.setText(String.valueOf(slider.getValue()));
+				}
+			});
+			slider.setBounds(xSlider, ySlider, larguraSlider, alturaSlider);
+			// Adicionar erro quando o texto for digitado no textField e o valor for maior que o permitido
+			// setar o minimo e o maximo
+//			slider.setMinimum();
+//			slider.setMaximum();
+			panelRespostas.add(slider);
+			
+			panelRespostas.setBorder(BorderFactory.createTitledBorder(""));
+			break;
+		default: //FERROU
+			break;
+		}
+		
+		this.setLocationRelativeTo(null);
+	}
+}

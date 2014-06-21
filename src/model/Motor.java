@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import view.TelaPerguntas;
+
 public class Motor {
 
 	private List<Variavel> variaveis;
@@ -67,6 +69,8 @@ public class Motor {
 			}
 		}
 		// Tela para perguntar valor(es) da variavel da premissa
+//		TelaPerguntas pergunta = new TelaPerguntas(premissa);
+//		pergunta.setVisible(true);
 		return false;
 	}
 	
