@@ -7,7 +7,7 @@ public class Motor {
 
 	private List<Variavel> variaveis;
 	private List<Regra> regras;
-	private String resultado; // Onde será escrito a "árvore"
+	private String resultado = "Árvore da consulta:"; // Onde será escrito a "árvore"
 	private static Motor instancia;
 	
 	private Motor() {
@@ -16,37 +16,53 @@ public class Motor {
 	}
 
 	public void executar() {
-		for(Regra regra : regras) {
-			boolean condicoes = true;
-			for(Sentenca premissa : regra.getPremissas()) {
-				if(!variavelResultado(premissa)) {
-					condicoes = false;
-					break;
+		boolean objetivo = false;
+		for (Regra regra : regras) {
+			if (!objetivo) {
+				resultado += "\n\nEntrando na regra de ordem " + (regras.indexOf(regra) + 1);
+				if (regra.getDescricao().equalsIgnoreCase("")) {
+					resultado += ".";
+				} else {
+					resultado += ": " + regra.getDescricao();
 				}
-			}
-			if(condicoes) {
-				// Realizar conclusões, e lembrar que se uma variável for objetivo, encerrar
-				for(Sentenca conclusao : regra.getConclusoes()) {
-					for(Variavel variavel : variaveis) {
-						if(variavel.equals(conclusao.getVariavel())) {
-							for(RespostaVariavel respostaVariavel : variavel.getRespostas()) {
-								if(respostaVariavel.getValor().equalsIgnoreCase(conclusao.getValorSelecao())) {
-									respostaVariavel.setOperador(conclusao.getOperadorSelecionado());
-									respostaVariavel.setSelecionado(true);
-								} else if(variavel.getTipo() != TipoVariavel.MULTIVALORADO) {
-									respostaVariavel.setOperador(null);
-									respostaVariavel.setSelecionado(false);
+				boolean condicoes = true;
+				for (Sentenca premissa : regra.getPremissas()) {
+					if (!variavelResultado(premissa)) {
+						condicoes = false;
+						break;
+					}
+				}
+				if (condicoes) {
+					resultado += "\nTodas as premissas da regra são verdadeiras. Logo, foram efetuadas as seguintes conclusões:";
+					// Realizar conclusões, e lembrar que se uma variável for objetivo, encerrar
+					for (Sentenca conclusao : regra.getConclusoes()) {
+						for (Variavel variavel : variaveis) {
+							if (variavel.equals(conclusao.getVariavel())) {
+								for (RespostaVariavel respostaVariavel : variavel.getRespostas()) {
+									if(respostaVariavel.getValor().equalsIgnoreCase(conclusao.getValorSelecao())) {
+										respostaVariavel.setSelecionado(true);
+										resultado += "\nVariável " + variavel.getNome() + " é IGUAL a "  + respostaVariavel.getValor() + ".";
+									} else if(variavel.getTipo() != TipoVariavel.MULTIVALORADO && respostaVariavel.isSelecionado()) {
+										respostaVariavel.setSelecionado(false);
+										resultado += "\nVariável " + variavel.getNome() + " NÃO é mais IGUAL a " + respostaVariavel.getValor() + ".";
+									}
 								}
+								if (variavel.isObjetivo()) {
+									objetivo = true;
+									// Instanciar tela com o resultado, árvore e
+									// valores das variáveis
+								}
+
+								break;
 							}
-							if(variavel.isObjetivo()) {
-								// Encerrar
-							}
-							
-							break;
 						}
 					}
 				}
 			}
+		}
+		// Instanciar árvore e valores das variáveis. Se chegou aqui, não alcançou nenhum objetivo.
+		if(!objetivo) {
+			
 		}
 	}
 	
@@ -58,6 +74,7 @@ public class Motor {
 						if(premissa.getOperadorSelecionado() == Operador.IGUAL || premissa.getOperadorSelecionado() == Operador.MAIOR_IGUAL || premissa.getOperadorSelecionado() == Operador.MENOR_IGUAL) {
 							return true;
 						} else {
+							resultado += "\nNão foi possível realizar as conclusões da regra, pois a variável " + variavel.getNome() + " é IGUAL a " + respostaVariavel.getValor() + ", e deveria ser " + premissa.getOperadorSelecionado() + " " + premissa.getValorSelecao() + "."; 
 							return false;
 						}
 						
@@ -68,6 +85,46 @@ public class Motor {
 		}
 		// Tela para perguntar valor(es) da variavel da premissa
 		return false;
+	}
+	
+	// Para verificar, quando for excluir uma variável, se ela está sendo usada em alguma regra
+	public String verificarVariavelUsada(Variavel variavel) {
+		String texto = "";
+		for(Regra regra : regras) {
+			for(Sentenca premissa: regra.getPremissas()) {
+				if(premissa.getVariavel().equals(variavel)) {
+					texto += "\nRegra de ordem " + (regras.indexOf(regra) + 1) + ", nas premissas.";
+				}
+			}
+			for(Sentenca conclusao: regra.getConclusoes()) {
+				if(conclusao.getVariavel().equals(variavel)) {
+					texto += "\nRegra de ordem " + (regras.indexOf(regra) + 1) + ", nas conclusões.";
+				}				
+			}
+		}
+		return texto;
+	}
+	
+	// Exclui além da variável, as regras onde ela está sendo utilizada
+	public void excluirVariavelUsada(Variavel variavel) {
+		List<Regra> regrasVariavel = new ArrayList<Regra>();
+		for(Regra regra : regras) {
+			for(Sentenca premissa: regra.getPremissas()) {
+				if(premissa.getVariavel().equals(variavel) && !regrasVariavel.contains(regra)) {
+					regrasVariavel.add(regra);
+				}
+			}
+			
+			for(Sentenca conclusao: regra.getConclusoes()) {
+				if(conclusao.getVariavel().equals(variavel) && !regrasVariavel.contains(regra)) {
+					regrasVariavel.add(regra);
+				}
+			}
+		}
+		variaveis.remove(variavel);
+		for(Regra regraVariavel : regrasVariavel) {
+			regras.remove(regraVariavel);
+		}
 	}
 	
 	public List<Variavel> getVariaveis() {
