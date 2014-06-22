@@ -19,6 +19,7 @@ public class Variavel {
 		this.tipo = tipo;
 		inserirOperadores();
 		this.respostas = new ArrayList<RespostaVariavel>();
+		this.pergunta = "";
 	}
 
 	private void inserirOperadores() {
@@ -41,8 +42,28 @@ public class Variavel {
 				return false;
 			}
 		}
-		respostas.add(new RespostaVariavel(valor));
+		respostas.add(new RespostaVariavel(valor.toLowerCase()));
 		return true;
+	}
+	
+	public String verificarValorUsado(String valor) {
+		String texto = "";
+		for(Regra regra : Motor.getInstancia().getRegras()) {
+			for(Sentenca premissa : regra.getPremissas()) {
+				if(premissa.getValorSelecao().equalsIgnoreCase(valor)) {
+					texto += "\nRegra de ordem " + (Motor.getInstancia().getRegras().indexOf(regra) + 1) + ", na(s) premissa(s).";
+					break;
+				}
+			}
+			
+			for(Sentenca conclusao : regra.getConclusoes()) {
+				if(conclusao.getValorSelecao().equalsIgnoreCase(valor)) {
+					texto += "\nRegra de ordem " + (Motor.getInstancia().getRegras().indexOf(regra) + 1) + ", na(s) conclusão(ões).";
+					break;
+				}
+			}
+		}		
+		return texto;
 	}
 	
 	public void removerValor(String valor) {
@@ -52,7 +73,20 @@ public class Variavel {
 				break;
 			}
 		}
-		//verificar sentenças
+
+		for(Regra regra : Motor.getInstancia().getRegras()) {
+			for(Sentenca premissa : regra.getPremissas()) {
+				if(premissa.getValorSelecao().equalsIgnoreCase(valor)) {
+					Motor.getInstancia().getRegras().remove(regra);
+				}
+			}
+			
+			for(Sentenca conclusao : regra.getConclusoes()) {
+				if(conclusao.getValorSelecao().equalsIgnoreCase(valor)) {
+					Motor.getInstancia().getRegras().remove(regra);
+				}
+			}
+		}
 	}
 	
 	public String getNome() {
