@@ -145,4 +145,10 @@ public class Variavel {
 	public void setRespostas(List<RespostaVariavel> respostas) {
 		this.respostas = respostas;
 	}
+
+	@Override
+	public String toString() {
+		return nome;
+	}
+	
 }

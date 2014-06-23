@@ -9,8 +9,7 @@ public class Regra {
 	private List<Sentenca> premissas;
 	private List<Sentenca> conclusoes;
 	
-	public Regra(String descricao) {
-		this.descricao = descricao;
+	public Regra() {
 		this.premissas = new ArrayList<Sentenca>();
 		this.conclusoes = new ArrayList<Sentenca>();
 	}

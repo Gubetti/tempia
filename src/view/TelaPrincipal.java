@@ -13,6 +13,8 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
+import model.Motor;
+
 public class TelaPrincipal {
 
 	private JFrame frmTtulo;
@@ -73,6 +75,11 @@ public class TelaPrincipal {
 		panel.add(btnVariveis);
 		
 		JButton btnExecutar = new JButton("Executar");
+		btnExecutar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Motor.getInstancia().executar();
+			}
+		});
 		panel.add(btnExecutar);
 		
 		JPanel panel_1 = new JPanel();
@@ -112,6 +119,11 @@ public class TelaPrincipal {
 		panel_2.add(panel_3);
 		
 		JButton btnInserir = new JButton("Inserir");
+		btnInserir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new TelaSentencas(null).setVisible(true);
+			}
+		});
 		panel_3.add(btnInserir);
 		
 		JButton btnEditar = new JButton("Editar");

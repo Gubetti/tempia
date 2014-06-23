@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -11,17 +12,26 @@ import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ListSelectionModel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.FlowLayout;
+
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
+
+import model.Motor;
+import model.Regra;
+import model.Sentenca;
 
 @SuppressWarnings("serial")
 public class TelaSentencas extends JDialog {
 	private JTextField textField;
 	private JTable tablePremissas;
 	private JTable tableConclusoes;
+	private Regra regraInserir;
+	private Regra regraEditar;
+	private Regra regraEditarBackup;
 
 	/**
 	 * Launch the application.
@@ -30,7 +40,7 @@ public class TelaSentencas extends JDialog {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaSentencas dialog = new TelaSentencas();
+					TelaSentencas dialog = new TelaSentencas(null);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 				} catch (Exception e) {
@@ -43,10 +53,20 @@ public class TelaSentencas extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public TelaSentencas() {
+	public TelaSentencas(Regra regraEdit) {
+		if(regraEdit == null) {
+			regraInserir = new Regra();
+			this.setTitle("Inserir regra");
+		} else {
+			regraEditar = regraEdit;
+			copiarRegraEdit();
+			this.setTitle("Editar regra");
+		}
+		
 		this.setBounds(100, 100, 600, 400);
 		this.setResizable(false);
 		this.getContentPane().setLayout(null);
+		this.setLocationRelativeTo(null);
 		
 		int larguraMaxima = this.getWidth() - 8;
 		int alturaMaxima = this.getHeight() - 35;
@@ -92,10 +112,20 @@ public class TelaSentencas extends JDialog {
 		panelOkCancela.setLayout(null);
 		
 		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				salvar();
+			}
+		});
 		btnSalvar.setBounds(xBotaoOk, yBotaoOkCancela, larguraBotao, alturaBotao);
 		panelOkCancela.add(btnSalvar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cancelar();
+			}
+		});
 		btnCancelar.setBounds(xBotaoCancela, yBotaoOkCancela, larguraBotao, alturaBotao);
 		panelOkCancela.add(btnCancelar);
 		
@@ -169,8 +199,18 @@ public class TelaSentencas extends JDialog {
 		panel_1.add(panel);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JButton btnInserir = new JButton("Inserir");
-		panel.add(btnInserir);
+		JButton btnInserirPremissa = new JButton("Inserir");
+		btnInserirPremissa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(regraInserir != null) {
+					new TelaSentenca(regraInserir, true, null).setVisible(true);
+				} else {
+					new TelaSentenca(regraEditar, true, null).setVisible(true);
+				}
+				atualizarTabelas();
+			}
+		});
+		panel.add(btnInserirPremissa);
 		
 		JButton btnEditar = new JButton("Editar");
 		panel.add(btnEditar);
@@ -189,8 +229,18 @@ public class TelaSentencas extends JDialog {
 		panel_3.add(panel_2);
 		panel_2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JButton btnInserir_1 = new JButton("Inserir");
-		panel_2.add(btnInserir_1);
+		JButton btnInserirConclusao = new JButton("Inserir");
+		btnInserirConclusao.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(regraInserir != null) {
+					new TelaSentenca(regraInserir, false, null).setVisible(true);
+				} else {
+					new TelaSentenca(regraEditar, false, null).setVisible(true);
+				}
+				atualizarTabelas();
+			}
+		});
+		panel_2.add(btnInserirConclusao);
 		
 		JButton btnEditar_1 = new JButton("Editar");
 		panel_2.add(btnEditar_1);
@@ -202,5 +252,74 @@ public class TelaSentencas extends JDialog {
 	private void adicionarLinha(JTable table, String variavel, String operador, String valor) {
 		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 		modelo.addRow(new String[] { variavel, operador, valor });
+	}
+	
+	private void atualizarTabelas() {
+		
+	}
+	
+	private void salvar() {
+		if(regraInserir != null) {
+			if(regraInserir.getPremissas().isEmpty() || regraInserir.getConclusoes().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "É necessário informar pelo menos uma premissa e uma conclusão.", "Aviso", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			for(Sentenca premissa : regraInserir.getPremissas()) {
+				for(Sentenca conclusao : regraInserir.getConclusoes()) {
+					if(premissa.getVariavel().equals(conclusao.getVariavel())) {
+						JOptionPane.showMessageDialog(null, "Uma variável não pode estar simultaneamente em uma premissa e em uma conclusão.", "Aviso", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
+				}
+			}
+			regraInserir.setDescricao(textField.getText());
+			Motor.getInstancia().getRegras().add(regraInserir);
+		}
+		
+		if(regraEditar != null) {
+			if(regraEditar.getPremissas().isEmpty() || regraEditar.getConclusoes().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "É necessário informar pelo menos uma premissa e uma conclusão.", "Aviso", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			for(Sentenca premissa : regraEditar.getPremissas()) {
+				for(Sentenca conclusao : regraEditar.getConclusoes()) {
+					if(premissa.getVariavel().equals(conclusao.getVariavel())) {
+						JOptionPane.showMessageDialog(null, "Uma variável não pode estar simultaneamente em uma premissa e em uma conclusão.", "Aviso", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
+				}
+			}
+			regraEditar.setDescricao(textField.getText());
+		}
+		dispose();
+	}
+	
+	private void cancelar() {
+		if(regraEditarBackup != null) {
+			for(int i = 0; i < Motor.getInstancia().getRegras().size(); i++) {
+				if(Motor.getInstancia().getRegras().get(i).equals(regraEditar)) {
+					Motor.getInstancia().getRegras().set(i, regraEditarBackup);
+					break;
+				}
+			}
+		}
+		dispose();
+	}
+	
+	private void copiarRegraEdit() {
+		regraEditarBackup = new Regra();
+		regraEditarBackup.setDescricao(regraEditar.getDescricao());
+		for(Sentenca premissa : regraEditar.getPremissas()) {
+			Sentenca sentenca = new Sentenca(premissa.getVariavel());
+			sentenca.setOperadorSelecionado(premissa.getOperadorSelecionado());
+			sentenca.setValorSelecao(premissa.getValorSelecao());
+			regraEditarBackup.getPremissas().add(sentenca);
+		}
+		for(Sentenca conclusao : regraEditar.getConclusoes()) {
+			Sentenca sentenca = new Sentenca(conclusao.getVariavel());
+			sentenca.setOperadorSelecionado(conclusao.getOperadorSelecionado());
+			sentenca.setValorSelecao(conclusao.getValorSelecao());
+			regraEditarBackup.getConclusoes().add(sentenca);
+		}
 	}
 }

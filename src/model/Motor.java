@@ -275,7 +275,7 @@ public class Motor {
 		conclusao1.setOperadorSelecionado(Operador.IGUAL);
 		conclusao1.setValorSelecao(con1.getRespostas().get(0).getValor());
 		
-		Regra regra1 = new Regra("");
+		Regra regra1 = new Regra();
 		regra1.getPremissas().add(premissa1);
 		regra1.getConclusoes().add(conclusao1);
 		Motor.getInstancia().getRegras().add(regra1);
@@ -292,7 +292,8 @@ public class Motor {
 		conclusao2.setOperadorSelecionado(Operador.IGUAL);
 		conclusao2.setValorSelecao(con1.getRespostas().get(1).getValor());
 		
-		Regra regra2 = new Regra("Teste de nome de regra");
+		Regra regra2 = new Regra();
+		regra2.setDescricao("Teste de nome de regra");
 		regra2.getPremissas().add(premissa2);
 		regra2.getPremissas().add(premissa3);
 		regra2.getConclusoes().add(conclusao2);
@@ -306,7 +307,7 @@ public class Motor {
 		conclusaoObjetivo1.setOperadorSelecionado(Operador.IGUAL);
 		conclusaoObjetivo1.setValorSelecao(obj.getRespostas().get(0).getValor());
 		
-		Regra regraObjetivo1 = new Regra("");
+		Regra regraObjetivo1 = new Regra();
 		regraObjetivo1.getPremissas().add(premissa4);
 		regraObjetivo1.getConclusoes().add(conclusaoObjetivo1);
 		Motor.getInstancia().getRegras().add(regraObjetivo1);
@@ -319,7 +320,7 @@ public class Motor {
 		conclusaoObjetivo2.setOperadorSelecionado(Operador.IGUAL);
 		conclusaoObjetivo2.setValorSelecao(obj.getRespostas().get(1).getValor());
 
-		Regra regraObjetivo2 = new Regra("");
+		Regra regraObjetivo2 = new Regra();
 		regraObjetivo2.getPremissas().add(premissa5);
 		regraObjetivo2.getConclusoes().add(conclusaoObjetivo2);
 		Motor.getInstancia().getRegras().add(regraObjetivo2);

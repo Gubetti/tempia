@@ -30,7 +30,6 @@ public class TelaVariaveis extends JDialog {
 			public void run() {
 				try {
 					TelaVariaveis dialog = new TelaVariaveis();
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,7 +42,7 @@ public class TelaVariaveis extends JDialog {
 	 * Create the dialog.
 	 */
 	public TelaVariaveis() {
-		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModal(true);
 		this.setBounds(100, 100, 341, 300);
 		this.setResizable(false);
@@ -52,9 +51,18 @@ public class TelaVariaveis extends JDialog {
 		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 		
-		
-		String[] colunas = new String[]{"Nome", "Pergunta"};
-		DefaultTableModel modelo = new DefaultTableModel(null, colunas);
+		DefaultTableModel modelo = new DefaultTableModel(
+			     null,
+			     new String[]{"Nome", "Pergunta"}){
+			         boolean[] canEdit = new boolean []{
+			             false, false,
+			         };
+			        
+			         @Override
+			         public boolean isCellEditable(int rowIndex, int columnIndex) {
+			             return canEdit [columnIndex];
+			         }
+			};
 		table = new JTable(modelo);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setBounds(10, 11, 1, 1);

@@ -24,4 +24,9 @@ public class RespostaVariavel {
 	public void setSelecionado(boolean selecionado) {
 		this.selecionado = selecionado;
 	}
+
+	@Override
+	public String toString() {
+		return valor;
+	}
 }
