@@ -1,24 +1,24 @@
 package view;
 
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.FlowLayout;
-
-import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.AbstractTableModel;
 
 import model.Motor;
 import model.Regra;
@@ -32,6 +32,7 @@ public class TelaSentencas extends JDialog {
 	private Regra regraInserir;
 	private Regra regraEditar;
 	private Regra regraEditarBackup;
+	private TelaSentencas telaSentencas;
 
 	/**
 	 * Launch the application.
@@ -54,6 +55,7 @@ public class TelaSentencas extends JDialog {
 	 * Create the dialog.
 	 */
 	public TelaSentencas(Regra regraEdit) {
+		telaSentencas = this;
 		if(regraEdit == null) {
 			regraInserir = new Regra();
 			this.setTitle("Inserir regra");
@@ -134,21 +136,16 @@ public class TelaSentencas extends JDialog {
 		this.getContentPane().add(panelPremissas);
 		panelPremissas.setLayout(null);
 		
-		tablePremissas = new JTable();
-		tablePremissas.setModel(new DefaultTableModel(
-			     null,
-			     new String[]{"Variável", "Operador", "Valor"}){
-			     
-			         boolean[] canEdit = new boolean []{
-			             false, false, false
-			         };
-			        
-			         @Override
-			         public boolean isCellEditable(int rowIndex, int columnIndex) {
-			             return canEdit [columnIndex];
-			         }
-			});
-//		adicionarLinha(tablePremissas, "", "", "");
+		List<Sentenca> premissas;
+		List<Sentenca> conclusoes;
+		if(regraEdit == null) {
+			premissas = regraInserir.getPremissas();
+			conclusoes = regraInserir.getConclusoes();
+		} else {
+			premissas = regraEdit.getPremissas();
+			conclusoes = regraEdit.getConclusoes();
+		}
+		tablePremissas = new JTable(new SentencaTableModel(premissas));
 		tablePremissas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tablePremissas.setBounds(10, 11, 1, 1);
 		tablePremissas.setSize(tablePremissas.getPreferredSize());
@@ -161,21 +158,7 @@ public class TelaSentencas extends JDialog {
 		this.getContentPane().add(panelConclusoes);
 		panelConclusoes.setLayout(null);
 		
-		tableConclusoes = new JTable();
-		tableConclusoes.setModel(new DefaultTableModel(
-			     null,
-			     new String[]{"Variável", "Operador", "Valor"}){
-			     
-			         boolean[] canEdit = new boolean []{
-			             false, false, false
-			         };
-			        
-			         @Override
-			         public boolean isCellEditable(int rowIndex, int columnIndex) {
-			             return canEdit [columnIndex];
-			         }
-			});
-//		adicionarLinha(tableConclusoes, "", "", "");
+		tableConclusoes = new JTable(new SentencaTableModel(conclusoes));
 		tableConclusoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableConclusoes.setBounds(10, 11, 1, 1);
 		tableConclusoes.setSize(tableConclusoes.getPreferredSize());
@@ -203,20 +186,29 @@ public class TelaSentencas extends JDialog {
 		btnInserirPremissa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(regraInserir != null) {
-					new TelaSentenca(regraInserir, true, null).setVisible(true);
+					new TelaSentenca(regraInserir, true, null, telaSentencas).setVisible(true);
 				} else {
-					new TelaSentenca(regraEditar, true, null).setVisible(true);
+					new TelaSentenca(regraEditar, true, null, telaSentencas).setVisible(true);
 				}
-				atualizarTabelas();
 			}
 		});
 		panel.add(btnInserirPremissa);
 		
-		JButton btnEditar = new JButton("Editar");
-		panel.add(btnEditar);
+		JButton btnEditarPremissa = new JButton("Editar");
+		btnEditarPremissa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editar(true);
+			}
+		});
+		panel.add(btnEditarPremissa);
 		
-		JButton btnExcluir = new JButton("Excluir");
-		panel.add(btnExcluir);
+		JButton btnExcluirPremissa = new JButton("Excluir");
+		btnExcluirPremissa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				excluir(tablePremissas);
+			}
+		});
+		panel.add(btnExcluirPremissa);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Conclus\u00E3o", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -233,29 +225,60 @@ public class TelaSentencas extends JDialog {
 		btnInserirConclusao.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(regraInserir != null) {
-					new TelaSentenca(regraInserir, false, null).setVisible(true);
+					new TelaSentenca(regraInserir, false, null, telaSentencas).setVisible(true);
 				} else {
-					new TelaSentenca(regraEditar, false, null).setVisible(true);
+					new TelaSentenca(regraEditar, false, null, telaSentencas).setVisible(true);
 				}
-				atualizarTabelas();
 			}
 		});
 		panel_2.add(btnInserirConclusao);
 		
-		JButton btnEditar_1 = new JButton("Editar");
-		panel_2.add(btnEditar_1);
+		JButton btnEditarConclusao = new JButton("Editar");
+		btnEditarConclusao.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editar(false);
+			}
+		});
+		panel_2.add(btnEditarConclusao);
 		
-		JButton btnExcluir_1 = new JButton("Excluir");
-		panel_2.add(btnExcluir_1);
+		JButton btnExcluirConclusao = new JButton("Excluir");
+		btnExcluirConclusao.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				excluir(tableConclusoes);
+			}
+		});
+		panel_2.add(btnExcluirConclusao);
 	}
 	
-	private void adicionarLinha(JTable table, String variavel, String operador, String valor) {
-		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
-		modelo.addRow(new String[] { variavel, operador, valor });
+	public void atualizarTabelas() {
+		SentencaTableModel modelo = (SentencaTableModel) tablePremissas.getModel();
+		modelo.notificarInsercao();
+		modelo = (SentencaTableModel) tableConclusoes.getModel();
+		modelo.notificarInsercao();
 	}
 	
-	private void atualizarTabelas() {
-		
+	private void editar(boolean premissa) {
+		try {
+			Regra regra = regraEditar;
+			if(regraInserir != null) {
+				regra = regraInserir;
+			}
+				if(premissa) {
+					new TelaSentenca(regra, true, ((SentencaTableModel) tablePremissas.getModel()).getSentenca(tablePremissas.getSelectedRow()), telaSentencas).setVisible(true);
+				} else {
+					new TelaSentenca(regra, false, ((SentencaTableModel) tableConclusoes.getModel()).getSentenca(tableConclusoes.getSelectedRow()), telaSentencas).setVisible(true);
+				}
+		} catch(Exception exception) {
+			JOptionPane.showMessageDialog(null, "Selecione a sentença que você deseja editar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	
+	private void excluir(JTable tabela) {
+		try {
+			((SentencaTableModel) tabela.getModel()).removeRow(tabela.getSelectedRow());
+		} catch(Exception exception) {
+			JOptionPane.showMessageDialog(null, "Selecione a sentença que você deseja remover.", "Aviso", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 	
 	private void salvar() {
@@ -321,5 +344,64 @@ public class TelaSentencas extends JDialog {
 			sentenca.setValorSelecao(conclusao.getValorSelecao());
 			regraEditarBackup.getConclusoes().add(sentenca);
 		}
+	}
+}
+
+@SuppressWarnings("serial")
+class SentencaTableModel extends AbstractTableModel{
+	private List<Sentenca> sentencas = new ArrayList<Sentenca>();
+	private String[] colunas = new String[] { "Variável", "Operador", "Valor" };
+	
+	public SentencaTableModel(List<Sentenca> sentencas) {
+		this.sentencas = sentencas;
+	}
+
+	@Override
+	public int getRowCount() {
+		return sentencas.size();
+	}
+	
+	@Override
+	public String getColumnName(int columnIndex) {
+	    return colunas[columnIndex];
+	};
+	
+	@Override
+	public int getColumnCount() {
+		return colunas.length;
+	}
+
+	@Override
+	public Object getValueAt(int row, int columnIndex) {
+		switch(columnIndex) {
+		case 0:
+			return sentencas.get(row).getVariavel().getNome();
+		case 1:
+			return sentencas.get(row).getOperadorSelecionado();
+		default:
+			return sentencas.get(row).getValorSelecao();
+		}
+	}
+	 
+	public Class<?> getColumnClass(int columnIndex) {  
+		return String.class;
+	}
+	
+	  @Override
+	    public boolean isCellEditable(int rowIndex, int columnIndex) {
+	        return false;
+	    }
+
+	public void removeRow(int row) {
+		sentencas.remove(row);
+		fireTableRowsDeleted(row, row);
+	}
+
+	public void notificarInsercao() {
+		fireTableRowsInserted(sentencas.size() - 1, sentencas.size() - 1);
+	}
+	
+	public Sentenca getSentenca(int row) {
+		return sentencas.get(row);
 	}
 }

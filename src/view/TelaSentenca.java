@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -15,28 +14,12 @@ import javax.swing.JPanel;
 import model.Motor;
 import model.Operador;
 import model.Regra;
+import model.RespostaVariavel;
 import model.Sentenca;
 import model.Variavel;
 
 @SuppressWarnings("serial")
 public class TelaSentenca extends JDialog {
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaSentenca dialog = new TelaSentenca(new Regra(), true, null);
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	@SuppressWarnings("rawtypes")
 	private JComboBox cbVariavel;
@@ -49,12 +32,12 @@ public class TelaSentenca extends JDialog {
 	private Regra regra;
 	private boolean premissa;
 	private Sentenca sentencaEditar;
-	
+	private TelaSentencas telaSentencas;
 	/**
 	 * Create the dialog.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public TelaSentenca(Regra regra, boolean premissa, Sentenca sentencaEditar) {
+	public TelaSentenca(Regra regra, boolean premissa, Sentenca sentencaEditar, TelaSentencas telaSentencas) {
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModal(true);
 		this.setBounds(100, 100, 460, 121);
@@ -63,6 +46,7 @@ public class TelaSentenca extends JDialog {
 		this.regra = regra;
 		this.premissa= premissa;
 		this.sentencaEditar = sentencaEditar;
+		this.telaSentencas = telaSentencas;
 		String txt = "Inserir ";
 		if(sentencaEditar != null) {
 			txt = "Editar ";
@@ -129,7 +113,18 @@ public class TelaSentenca extends JDialog {
 			}
 			cbOperador.setModel(modelOperadores);
 			DefaultComboBoxModel<Object> modelValores = new DefaultComboBoxModel<>(variavelSelecionada.getRespostas().toArray());
-			cbValores.setModel(modelValores);			
+			cbValores.setModel(modelValores);
+			
+			if(sentencaEditar != null) {
+				cbVariavel.setSelectedItem(sentencaEditar.getVariavel());
+				cbOperador.setSelectedItem(sentencaEditar.getOperadorSelecionado());
+				for(RespostaVariavel respostaVariavel : variavelSelecionada.getRespostas()) {
+					if(respostaVariavel.getValor().equalsIgnoreCase(sentencaEditar.getValorSelecao())) {
+						cbValores.setSelectedItem(respostaVariavel);
+						break;
+					}
+				}
+			}
 		} else {
 			btnSalvar.setEnabled(false);
 		}
@@ -150,6 +145,7 @@ public class TelaSentenca extends JDialog {
 			sentencaEditar.setOperadorSelecionado((Operador)cbOperador.getSelectedItem());
 			sentencaEditar.setValorSelecao(cbValores.getSelectedItem().toString());
 		}
+		telaSentencas.atualizarTabelas();
 		dispose();
 	}
 }
