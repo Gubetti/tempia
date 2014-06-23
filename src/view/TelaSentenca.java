@@ -123,7 +123,10 @@ public class TelaSentenca extends JDialog {
 	private void carregarCombos() {
 		Variavel variavelSelecionada = (Variavel) cbVariavel.getSelectedItem();
 		if(variavelSelecionada != null) {
-			DefaultComboBoxModel<Object> modelOperadores = new DefaultComboBoxModel<>(variavelSelecionada.getOperadores().toArray());
+			DefaultComboBoxModel<Object> modelOperadores = new DefaultComboBoxModel<>(new Object[]{Operador.IGUAL});
+			if(premissa) {
+				modelOperadores = new DefaultComboBoxModel<>(variavelSelecionada.getOperadores().toArray());
+			}
 			cbOperador.setModel(modelOperadores);
 			DefaultComboBoxModel<Object> modelValores = new DefaultComboBoxModel<>(variavelSelecionada.getRespostas().toArray());
 			cbValores.setModel(modelValores);			
