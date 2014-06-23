@@ -246,25 +246,25 @@ public class Motor {
 		//Teste de execução
 		Variavel v1 = new Variavel("v1", false, TipoVariavel.MULTIVALORADO);
 		v1.setPergunta("Você gosta");
-		v1.inserirValor("Notícias");
-		v1.inserirValor("Esporte");
-		v1.inserirValor("Artes");
-		v1.inserirValor("Humor");
+		v1.inserirValor(new RespostaVariavel("Notícias"));
+		v1.inserirValor(new RespostaVariavel("Esporte"));
+		v1.inserirValor(new RespostaVariavel("Artes"));
+		v1.inserirValor(new RespostaVariavel("Humor"));
 		Motor.getInstancia().getVariaveis().add(v1);
 		
 		Variavel con1 = new Variavel("con1", false, TipoVariavel.UNIVALORADO);
-		con1.inserirValor("Sim");
-		con1.inserirValor("Não");
+		con1.inserirValor(new RespostaVariavel("Sim"));
+		con1.inserirValor(new RespostaVariavel("Não"));
 		Motor.getInstancia().getVariaveis().add(con1);
 		
 		Variavel v2 = new Variavel("v2", false, TipoVariavel.UNIVALORADO);
-		v2.inserirValor("Sou");
-		v2.inserirValor("Não sou");
+		v2.inserirValor(new RespostaVariavel("Sou"));
+		v2.inserirValor(new RespostaVariavel("Não sou"));
 		Motor.getInstancia().getVariaveis().add(v2);
 		
 		Variavel obj = new Variavel("OBJETIVO", true, TipoVariavel.UNIVALORADO);
-		obj.inserirValor("Legal :)");
-		obj.inserirValor("Não legal :-(");
+		obj.inserirValor(new RespostaVariavel("Legal :)"));
+		obj.inserirValor(new RespostaVariavel("Não legal :-("));
 		Motor.getInstancia().getVariaveis().add(obj);
 		
 		Sentenca premissa1 = new Sentenca(v1);

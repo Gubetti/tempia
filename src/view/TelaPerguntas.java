@@ -234,7 +234,7 @@ public class TelaPerguntas extends JDialog {
 					}
 					dispose();				
 				} else {
-					JOptionPane.showMessageDialog(null, "Por Favor.\nPreencha com um valor!", "Aviso", JOptionPane.WARNING_MESSAGE);;
+					JOptionPane.showMessageDialog(null, "Por Favor.\nPreencha com um valor!", "Aviso", JOptionPane.WARNING_MESSAGE);
 				}
 				
 			}

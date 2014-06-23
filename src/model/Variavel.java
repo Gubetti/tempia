@@ -36,13 +36,13 @@ public class Variavel {
 		}
 	}
 	
-	public boolean inserirValor(String valor) {
+	public boolean inserirValor(RespostaVariavel valor) {
 		for(RespostaVariavel respostaVariavel : respostas) {
-			if(respostaVariavel.getValor().equalsIgnoreCase(valor)) {
+			if(respostaVariavel.getValor().equalsIgnoreCase(valor.getValor())) {
 				return false;
 			}
 		}
-		respostas.add(new RespostaVariavel(valor));
+		respostas.add(valor);
 		return true;
 	}
 	
