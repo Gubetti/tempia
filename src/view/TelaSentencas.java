@@ -56,11 +56,13 @@ public class TelaSentencas extends JDialog {
 	 */
 	public TelaSentencas(Regra regraEdit) {
 		telaSentencas = this;
+		textField = new JTextField();
 		if(regraEdit == null) {
 			regraInserir = new Regra();
 			this.setTitle("Inserir regra");
 		} else {
 			regraEditar = regraEdit;
+			textField.setText(regraEdit.getDescricao());
 			copiarRegraEdit();
 			this.setTitle("Editar regra");
 		}
@@ -69,7 +71,8 @@ public class TelaSentencas extends JDialog {
 		this.setResizable(false);
 		this.getContentPane().setLayout(null);
 		this.setLocationRelativeTo(null);
-		
+		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		this.setModal(true);
 		int larguraMaxima = this.getWidth() - 8;
 		int alturaMaxima = this.getHeight() - 35;
 		int larguraPanelNome = 350;
@@ -103,7 +106,6 @@ public class TelaSentencas extends JDialog {
 		lblDescricao.setSize(lblDescricao.getPreferredSize());
 		panelNome.add(lblDescricao);
 		
-		textField = new JTextField();
 		textField.setBounds(xTfDescricao, yTfDescricao, larguraTfDescricao, alturaTfDescricao);
 		panelNome.add(textField);
 		textField.setColumns(10);

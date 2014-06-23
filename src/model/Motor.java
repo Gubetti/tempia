@@ -61,6 +61,7 @@ public class Motor {
 		if(!objetivo) {
 			
 		}
+		limparRespostas();
 		System.out.println(resultado);
 	}
 	
@@ -74,7 +75,7 @@ public class Motor {
 		
 		boolean valor = verificarValoresVarivael(premissa);
 		if(!valor) {
-			resultado += "\nNão foi possível realizar as conclusões da regra, pois a variável " + premissa.getVariavel().getNome() + " NÃO é: " + premissa.getOperadorSelecionado() + " " + premissa.getValorSelecao() + ".";
+			resultado += "\nNão foi possível realizar as conclusões da regra, pois a variável " + premissa.getVariavel().getNome() + " NÃO é " + premissa.getOperadorSelecionado() + " " + premissa.getValorSelecao() + ".";
 		}
 		return valor;
 	}
@@ -190,6 +191,14 @@ public class Motor {
 		variaveis.remove(variavel);
 		for(Regra regraVariavel : regrasVariavel) {
 			regras.remove(regraVariavel);
+		}
+	}
+	
+	private void limparRespostas() {
+		for(Variavel variavel : variaveis) {
+			for(RespostaVariavel respostaVariavel : variavel.getRespostas()) {
+				respostaVariavel.setSelecionado(false);
+			}
 		}
 	}
 	
