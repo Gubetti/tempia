@@ -1,37 +1,41 @@
 package view;
 
 import java.awt.EventQueue;
-
-import javax.swing.JDialog;
-
-import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.BoxLayout;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.ListSelectionModel;
-
-import java.awt.FlowLayout;
-
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JCheckBox;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import model.RespostaVariavel;
+import model.TipoVariavel;
+import model.Variavel;
 
+@SuppressWarnings("serial")
 public class TelaVariavel extends JDialog {
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField txtNome;
+	private JTextField txtPergunta;
+	private final List<JRadioButton> jRadioList = new ArrayList<JRadioButton>();
+	private JCheckBox chckbxObjetvo;
 	private JTable table;
+	private JButton btnInserir;
+	private JButton btnExcluir;
+	private Variavel variavelEditar;
 
 	/**
 	 * Launch the application.
@@ -54,6 +58,42 @@ public class TelaVariavel extends JDialog {
 	 * Create the dialog.
 	 */
 	public TelaVariavel() {
+		init();
+		this.setTitle("Inserir variável");
+	}
+	
+	public TelaVariavel(Variavel variavel) {
+		this.variavelEditar = variavel;
+		init();
+		this.setTitle("Editar variável " + variavel.getNome());
+		txtNome.setText(variavel.getNome());
+		txtPergunta.setText(variavel.getPergunta());
+		switch(variavel.getTipo()) {
+		case UNIVALORADO:
+			jRadioList.get(0).setSelected(true);
+			break;
+		case MULTIVALORADO:
+			jRadioList.get(1).setSelected(true);
+			break;
+		case NUMERICO:
+			jRadioList.get(2).setSelected(true);
+		}
+		chckbxObjetvo.setSelected(variavel.isObjetivo());
+		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+		
+		if(variavel.getTipo() != TipoVariavel.NUMERICO) {
+			for(RespostaVariavel respostaVariavel : variavel.getRespostas()) {
+				modelo.addRow(new String[] { respostaVariavel.getValor() });
+			}
+		} else {
+			btnInserir.setEnabled(false);
+			btnExcluir.setEnabled(false);
+			modelo.addRow(new String[] { variavel.getRespostas().get(0).getValor() });
+			modelo.addRow(new String[] { variavel.getRespostas().get(variavel.getRespostas().size() - 1).getValor() });
+		}
+	}
+	
+	private void init() {
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModal(true);
 		this.setBounds(100, 100, 460, 417);
@@ -69,10 +109,10 @@ public class TelaVariavel extends JDialog {
 		lblNome.setSize(lblNome.getPreferredSize());
 		getContentPane().add(lblNome);
 		
-		textField = new JTextField();
-		textField.setBounds(64, 22, 240, 20);
-		getContentPane().add(textField);
-		textField.setColumns(10);
+		txtNome = new JTextField();
+		txtNome.setBounds(64, 22, 240, 20);
+		getContentPane().add(txtNome);
+		txtNome.setColumns(10);
 		
 		ButtonGroup buttonGroup = new ButtonGroup();
 		JPanel panel = new JPanel();
@@ -84,12 +124,20 @@ public class TelaVariavel extends JDialog {
 		JRadioButton multi = new JRadioButton("Multivalorado");
 		multi.setBounds(16, 43, 89, 23);
 		multi.setSize(multi.getPreferredSize());
-		final JRadioButton numer = new JRadioButton("Númerico");
+		JRadioButton numer = new JRadioButton("Númerico");
 		numer.setBounds(16, 68, 69, 23);
 		numer.setSize(numer.getPreferredSize());
+		numer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				acaoNumerico();
+			}
+		});
 		buttonGroup.add(uni);
 		buttonGroup.add(multi);
 		buttonGroup.add(numer);
+		jRadioList.add(uni);
+		jRadioList.add(multi);
+		jRadioList.add(numer);
 		panel.setLayout(null);
 		panel.add(uni);
 		panel.add(multi);
@@ -105,18 +153,7 @@ public class TelaVariavel extends JDialog {
 		JButton btnOk = new JButton("Salvar");
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (numer.isSelected()) {
-					DefaultTableModel modelo = (DefaultTableModel) table.getModel();
-					for (int i = 0; i < modelo.getRowCount(); i++) {
-						try {
-							String temp = String.valueOf(modelo.getValueAt(i, 0)).trim();
-							Integer.parseInt(temp);
-						} catch (NumberFormatException e) {
-							JOptionPane.showMessageDialog(null, "Digite apenas números");
-							break;
-						}
-					}
-				}
+				salvar();
 			}
 		});
 		panel_1.add(btnOk);
@@ -127,10 +164,10 @@ public class TelaVariavel extends JDialog {
 		lblPergunta.setSize(lblPergunta.getPreferredSize());
 		getContentPane().add(lblPergunta);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(64, 53, 240, 20);
-		getContentPane().add(textField_1);
-		textField_1.setColumns(10);
+		txtPergunta = new JTextField();
+		txtPergunta.setBounds(64, 53, 240, 20);
+		getContentPane().add(txtPergunta);
+		txtPergunta.setColumns(10);
 		
 		String[] colunas = new String[]{"Valores"};
 		DefaultTableModel modelo = new DefaultTableModel(null, colunas);
@@ -146,7 +183,7 @@ public class TelaVariavel extends JDialog {
 		panel_2.setBounds(314, 162, 130, 161);
 		getContentPane().add(panel_2);
 		
-		JButton btnInserir = new JButton("Inserir");
+		btnInserir = new JButton("Inserir");
 		btnInserir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				adicionarLinha("");
@@ -155,7 +192,7 @@ public class TelaVariavel extends JDialog {
 		btnInserir.setSize(100, 25);
 		panel_2.add(btnInserir);
 		
-		JButton btnExcluir = new JButton("Excluir");
+		btnExcluir = new JButton("Excluir");
 		btnExcluir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removerLinha(table.getSelectedRow());
@@ -164,10 +201,9 @@ public class TelaVariavel extends JDialog {
 		btnExcluir.setSize(100, 25);
 		panel_2.add(btnExcluir);
 		
-		JCheckBox chckbxObjetvo = new JCheckBox("Objetvo");
+		chckbxObjetvo = new JCheckBox("Objetvo");
 		chckbxObjetvo.setBounds(119, 80, 97, 23);
 		getContentPane().add(chckbxObjetvo);
-		
 	}
 	
 	private void adicionarLinha(String valor) {
@@ -181,6 +217,19 @@ public class TelaVariavel extends JDialog {
 			modelo.removeRow(linha);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void acaoNumerico() {
+		System.out.println("Clique");
+	}
+	
+	private void salvar() {
+		// Nova
+		if(variavelEditar == null) {
+			variavelEditar = new Variavel(txtNome.getText(), chckbxObjetvo.isSelected(), null);
+		} else {
+			
 		}
 	}
 }

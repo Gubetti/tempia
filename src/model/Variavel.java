@@ -42,7 +42,7 @@ public class Variavel {
 				return false;
 			}
 		}
-		respostas.add(new RespostaVariavel(valor.toLowerCase()));
+		respostas.add(new RespostaVariavel(valor));
 		return true;
 	}
 	

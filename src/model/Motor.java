@@ -142,6 +142,17 @@ public class Motor {
 		return false;
 	}
 	
+	public boolean inserirVariavel(Variavel novaVariavel) {
+		for(Variavel variavel : variaveis) {
+			if(variavel.getNome().equalsIgnoreCase(novaVariavel.getNome())) {
+				return false;
+			}
+		}
+		
+		variaveis.add(novaVariavel);
+		return true;
+	}
+	
 	// Para verificar, quando for excluir uma variável, se ela está sendo usada em alguma regra
 	public String verificarVariavelUsada(Variavel variavel) {
 		String texto = "";
