@@ -21,10 +21,11 @@ import model.Regra;
 
 public class TelaPrincipal {
 
-	private JFrame frmTtulo;
+	private JFrame frame;
 	private JTable table;
 	private JButton btnEditar;
 	private JButton btnExcluir;
+	private static TelaPrincipal instancia;
 
 	/**
 	 * Launch the application.
@@ -33,8 +34,8 @@ public class TelaPrincipal {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaPrincipal window = new TelaPrincipal();
-					window.frmTtulo.setVisible(true);
+					TelaPrincipal window = TelaPrincipal.getInstancia();
+					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -45,7 +46,7 @@ public class TelaPrincipal {
 	/**
 	 * Create the application.
 	 */
-	public TelaPrincipal() {
+	private TelaPrincipal() {
 		initialize();
 	}
 
@@ -53,16 +54,16 @@ public class TelaPrincipal {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmTtulo = new JFrame();
-		frmTtulo.setResizable(false);
-		frmTtulo.setTitle("Motor de inferência");
-		frmTtulo.setBounds(100, 100, 450, 300);
-		frmTtulo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmTtulo.getContentPane().setLayout(null);
+		frame = new JFrame();
+		frame.setResizable(false);
+		frame.setTitle("Motor de inferência");
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(0, 0, 105, 266);
-		frmTtulo.getContentPane().add(panel);
+		frame.getContentPane().add(panel);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JButton btnAbrirArquivo = new JButton("Abrir Base");
@@ -93,7 +94,7 @@ public class TelaPrincipal {
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(104, 0, 247, 266);
-		frmTtulo.getContentPane().add(panel_1);
+		frame.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
 		table = new JTable(new RegraTableModel(Motor.getInstancia().getRegras()));
@@ -106,7 +107,7 @@ public class TelaPrincipal {
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(350, 0, 92, 266);
-		frmTtulo.getContentPane().add(panel_2);
+		frame.getContentPane().add(panel_2);
 		panel_2.setLayout(null);
 		
 		JPanel panel_3 = new JPanel();
@@ -140,7 +141,7 @@ public class TelaPrincipal {
 		estadoBotoes();
 	}	
 	
-	private void atualizarTabelaRegras() {
+	public void atualizarTabelaRegras() {
 		((RegraTableModel) table.getModel()).notificarInsercao();
 		estadoBotoes();
 	}
@@ -161,7 +162,6 @@ public class TelaPrincipal {
 			atualizarTabelaRegras();
 		} catch(Exception exception) {
 			JOptionPane.showMessageDialog(null, "Selecione a regra que você deseja editar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-			exception.printStackTrace();
 		}		
 	}
 	
@@ -172,6 +172,13 @@ public class TelaPrincipal {
 		} catch(Exception exception) {
 			JOptionPane.showMessageDialog(null, "Selecione a regra que você deseja remover.", "Aviso", JOptionPane.WARNING_MESSAGE);
 		}
+	}
+	
+	public static TelaPrincipal getInstancia() {
+		if(instancia == null) {
+			instancia = new TelaPrincipal();
+		}
+		return instancia;
 	}
 }
 

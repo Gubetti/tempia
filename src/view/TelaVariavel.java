@@ -238,6 +238,7 @@ public class TelaVariavel extends JDialog {
 							+ texto + "\nSe prosseguir, a(s) regra(s) acima serão excluídas.\nDeseja continuar?", "Aviso", JOptionPane.ERROR_MESSAGE);
 					if(aviso == 0) {
 						variavelEditar.removerValor(modelo.getRespostaVariavel(linha).getValor());
+						TelaPrincipal.getInstancia().atualizarTabelaRegras();
 					}
 				}
 			}

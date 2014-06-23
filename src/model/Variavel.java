@@ -50,14 +50,14 @@ public class Variavel {
 		String texto = "";
 		for(Regra regra : Motor.getInstancia().getRegras()) {
 			for(Sentenca premissa : regra.getPremissas()) {
-				if(premissa.getValorSelecao().equalsIgnoreCase(valor)) {
+				if(premissa.getVariavel().equals(this) && premissa.getValorSelecao().equalsIgnoreCase(valor)) {
 					texto += "\nRegra de ordem " + (Motor.getInstancia().getRegras().indexOf(regra) + 1) + ", na(s) premissa(s).";
 					break;
 				}
 			}
 			
 			for(Sentenca conclusao : regra.getConclusoes()) {
-				if(conclusao.getValorSelecao().equalsIgnoreCase(valor)) {
+				if(conclusao.getVariavel().equals(this) && conclusao.getValorSelecao().equalsIgnoreCase(valor)) {
 					texto += "\nRegra de ordem " + (Motor.getInstancia().getRegras().indexOf(regra) + 1) + ", na(s) conclusão(ões).";
 					break;
 				}
@@ -74,18 +74,23 @@ public class Variavel {
 			}
 		}
 
+		List<Regra> regrasRemover = new ArrayList<Regra>();
 		for(Regra regra : Motor.getInstancia().getRegras()) {
 			for(Sentenca premissa : regra.getPremissas()) {
 				if(premissa.getValorSelecao().equalsIgnoreCase(valor)) {
-					Motor.getInstancia().getRegras().remove(regra);
+					regrasRemover.add(regra);
 				}
 			}
 			
 			for(Sentenca conclusao : regra.getConclusoes()) {
 				if(conclusao.getValorSelecao().equalsIgnoreCase(valor)) {
-					Motor.getInstancia().getRegras().remove(regra);
+					regrasRemover.add(regra);
 				}
 			}
+		}
+		
+		for(Regra regraRemover : regrasRemover) {
+			Motor.getInstancia().getRegras().remove(regraRemover);
 		}
 	}
 	

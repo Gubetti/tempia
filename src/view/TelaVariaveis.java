@@ -123,6 +123,7 @@ public class TelaVariaveis extends JDialog {
 										+ texto + "\nSe prosseguir, a(s) regra(s) acima serão excluídas.\nDeseja continuar?", "Aviso", JOptionPane.ERROR_MESSAGE);
 								if(aviso == 0) {
 									Motor.getInstancia().excluirVariavelUsada(variavel);
+									TelaPrincipal.getInstancia().atualizarTabelaRegras();
 								}
 							}
 							adicionarVariaveis();
