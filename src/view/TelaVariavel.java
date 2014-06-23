@@ -10,6 +10,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.ListSelectionModel;
@@ -23,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JCheckBox;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -82,7 +84,7 @@ public class TelaVariavel extends JDialog {
 		JRadioButton multi = new JRadioButton("Multivalorado");
 		multi.setBounds(16, 43, 89, 23);
 		multi.setSize(multi.getPreferredSize());
-		JRadioButton numer = new JRadioButton("Númerico");
+		final JRadioButton numer = new JRadioButton("Númerico");
 		numer.setBounds(16, 68, 69, 23);
 		numer.setSize(numer.getPreferredSize());
 		buttonGroup.add(uni);
@@ -101,6 +103,22 @@ public class TelaVariavel extends JDialog {
 		panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JButton btnOk = new JButton("Salvar");
+		btnOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (numer.isSelected()) {
+					DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+					for (int i = 0; i < modelo.getRowCount(); i++) {
+						try {
+							String temp = String.valueOf(modelo.getValueAt(i, 0)).trim();
+							Integer.parseInt(temp);
+						} catch (NumberFormatException e) {
+							JOptionPane.showMessageDialog(null, "Digite apenas números");
+							break;
+						}
+					}
+				}
+			}
+		});
 		panel_1.add(btnOk);
 		
 		JLabel lblPergunta = new JLabel("Pergunta");
@@ -115,8 +133,7 @@ public class TelaVariavel extends JDialog {
 		textField_1.setColumns(10);
 		
 		String[] colunas = new String[]{"Valores"};
-		String[][] dados = new String[][]{{""}};
-		DefaultTableModel modelo = new DefaultTableModel(dados, colunas);
+		DefaultTableModel modelo = new DefaultTableModel(null, colunas);
 		table = new JTable(modelo);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setBounds(10, 11, 1, 1);

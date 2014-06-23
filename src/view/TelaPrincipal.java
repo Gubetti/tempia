@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class TelaPrincipal {
 
-	private JFrame frame;
+	private JFrame frmTtulo;
 	private JTable table;
 
 	/**
@@ -29,7 +29,7 @@ public class TelaPrincipal {
 			public void run() {
 				try {
 					TelaPrincipal window = new TelaPrincipal();
-					window.frame.setVisible(true);
+					window.frmTtulo.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -49,15 +49,23 @@ public class TelaPrincipal {
 	 */
 	@SuppressWarnings("serial")
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmTtulo = new JFrame();
+		frmTtulo.setResizable(false);
+		frmTtulo.setTitle("T\u00EDtulo");
+		frmTtulo.setBounds(100, 100, 450, 300);
+		frmTtulo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmTtulo.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 91, 266);
-		frame.getContentPane().add(panel);
+		panel.setBounds(0, 0, 105, 266);
+		frmTtulo.getContentPane().add(panel);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		JButton btnAbrirArquivo = new JButton("Abrir Base");
+		panel.add(btnAbrirArquivo);
+		
+		JButton btnSalvarArquivo = new JButton("Salvar Base");
+		panel.add(btnSalvarArquivo);
 		
 		JButton btnVariveis = new JButton("Vari\u00E1veis");
 		panel.add(btnVariveis);
@@ -66,8 +74,8 @@ public class TelaPrincipal {
 		panel.add(btnExecutar);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(90, 0, 261, 266);
-		frame.getContentPane().add(panel_1);
+		panel_1.setBounds(104, 0, 247, 266);
+		frmTtulo.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
 		table = new JTable();
@@ -94,7 +102,7 @@ public class TelaPrincipal {
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(350, 0, 92, 266);
-		frame.getContentPane().add(panel_2);
+		frmTtulo.getContentPane().add(panel_2);
 		panel_2.setLayout(null);
 		
 		JPanel panel_3 = new JPanel();
