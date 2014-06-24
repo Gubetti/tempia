@@ -1,21 +1,24 @@
 package view;
 
 import java.awt.EventQueue;
+import java.awt.Font;
 
 import javax.swing.JDialog;
-import javax.swing.JTabbedPane;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Color;
-import java.awt.SystemColor;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.JTextField;
 
+import model.Motor;
+import model.RespostaVariavel;
+import model.Variavel;
+
+@SuppressWarnings("serial")
 public class TelaResultado extends JDialog {
 
 	private JTable tableValores;
@@ -28,7 +31,7 @@ public class TelaResultado extends JDialog {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaResultado dialog = new TelaResultado();
+					TelaResultado dialog = new TelaResultado("OK");
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 				} catch (Exception e) {
@@ -41,12 +44,12 @@ public class TelaResultado extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public TelaResultado() {
+	public TelaResultado(String resultadoConsulta) {
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModal(true);
 		this.setBounds(100, 100, 450, 300);
 		this.setResizable(false);
-		
+		this.setTitle("Resultados da consulta");
 		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 		
@@ -65,7 +68,7 @@ public class TelaResultado extends JDialog {
 		panelResultado.add(lblConsulta);
 		
 		txtTes = new JTextField();
-		txtTes.setEnabled(false);
+		txtTes.setText(resultadoConsulta);
 		txtTes.setEditable(false);
 		txtTes.setBounds(83, 75, 260, 25);
 		panelResultado.add(txtTes);
@@ -77,6 +80,7 @@ public class TelaResultado extends JDialog {
 		panelArvore.setLayout(null);
 		
 		JTextArea textArea = new JTextArea();
+		textArea.setText(Motor.getInstancia().getResultado());
 		textArea.setEditable(false);
 		textArea.setBounds(0, 0, 4, 22);
 		textArea.setSize(textArea.getPreferredSize());
@@ -89,10 +93,9 @@ public class TelaResultado extends JDialog {
 		tabbedPane.addTab("Todos os Valores", panelValores);
 		panelValores.setLayout(null);
 		
-		@SuppressWarnings("serial")
 		DefaultTableModel modelo = new DefaultTableModel(
 			     null,
-			     new String[]{"Variável", "Valores"}){
+			     new String[]{"Variável", "Valor(es)", "Objetivo"}){
 			         boolean[] canEdit = new boolean []{
 			             false, false,
 			         };
@@ -106,6 +109,23 @@ public class TelaResultado extends JDialog {
 		tableValores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableValores.setBounds(10, 11, 1, 1);
 		tableValores.setSize(tableValores.getPreferredSize());
+		
+		for(Variavel variavel : Motor.getInstancia().getVariaveis()) {
+			String valor = "";
+			for(RespostaVariavel respostaVariavel : variavel.getRespostas()) {
+				if(respostaVariavel.isSelecionado()) {
+					if(!valor.equalsIgnoreCase("")) {
+						valor += "; ";
+					}
+					valor += respostaVariavel.getValor();
+				}
+			}
+			String objetivo = "Não";
+			if(variavel.isObjetivo()) {
+				objetivo = "Sim";
+			}
+			modelo.addRow(new String[] {variavel.getNome(), valor, objetivo});
+		}
 		
 		JScrollPane scrollPane = new JScrollPane(tableValores);
 		scrollPane.setBounds(0, 0, panelValores.getWidth(), panelValores.getHeight() - 30);

@@ -232,7 +232,10 @@ public class TelaPerguntas extends JDialog {
 							}
 						}
 					}
-					dispose();				
+					dispose();	
+					if(premissa.getVariavel().isObjetivo()) {
+						Motor.getInstancia().setObjetivo(true);
+					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Por Favor.\nPreencha com um valor!", "Aviso", JOptionPane.WARNING_MESSAGE);
 				}

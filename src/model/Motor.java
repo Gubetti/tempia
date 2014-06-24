@@ -5,13 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import view.TelaPerguntas;
+import view.TelaResultado;
 
 public class Motor implements Serializable {
 	
 	private static final long serialVersionUID = 3526380291018246832L;
 	private List<Variavel> variaveis;
 	private List<Regra> regras;
-	private String resultado = "Árvore da consulta:"; // Onde será escrito a "árvore"
+	private String resultado = ""; // Onde será escrito a "árvore"
+	private boolean objetivo = false;
 	private static Motor instancia;
 	
 	private Motor() {
@@ -20,10 +22,13 @@ public class Motor implements Serializable {
 	}
 
 	public void executar() {
-		boolean objetivo = false;
+		objetivo = false;
 		for (Regra regra : regras) {
 			if (!objetivo) {
-				resultado += "\n\nEntrando na regra de ordem " + (regras.indexOf(regra) + 1);
+				if(!resultado.equalsIgnoreCase("")) {
+					resultado += "\n\n";
+				}
+				resultado += "Entrando na regra de ordem " + (regras.indexOf(regra) + 1);
 				if (regra.getDescricao().equalsIgnoreCase("")) {
 					resultado += ".";
 				} else {
@@ -52,8 +57,16 @@ public class Motor implements Serializable {
 						}
 						if (conclusao.getVariavel().isObjetivo()) {
 							objetivo = true;
-									// Instanciar tela com o resultado, árvore e
-									// valores das variáveis
+							String resultado = "";
+							for(RespostaVariavel respostaVariavel : conclusao.getVariavel().getRespostas()) {
+								if(respostaVariavel.isSelecionado()) {
+									if(!resultado.equalsIgnoreCase("")) {
+										resultado += "; ";
+									}
+									resultado += respostaVariavel.getValor();
+								}
+							}
+							new TelaResultado(resultado).setVisible(true);
 						}
 					}
 				}
@@ -61,7 +74,7 @@ public class Motor implements Serializable {
 		}
 		// Instanciar árvore e valores das variáveis. Se chegou aqui, não alcançou nenhum objetivo.
 		if(!objetivo) {
-			
+			new TelaResultado("Não foi atingido nenhum objetivo.").setVisible(true);
 		}
 		System.out.println(resultado);
 		limparRespostas();
@@ -73,6 +86,20 @@ public class Motor implements Serializable {
 			resultado += "\nPerguntando ao usuário o valor da variável " + premissa.getVariavel().getNome() + ".";
 			TelaPerguntas pergunta = new TelaPerguntas(premissa, descricaoRegra, ordem);
 			pergunta.setVisible(true);
+		}
+		
+		if(objetivo) {
+			String resultado = "";
+			for(RespostaVariavel respostaVariavel : premissa.getVariavel().getRespostas()) {
+				if(respostaVariavel.isSelecionado()) {
+					if(!resultado.equalsIgnoreCase("")) {
+						resultado += "; ";
+					}
+					resultado += respostaVariavel.getValor();
+				}
+			}
+			new TelaResultado(resultado).setVisible(true);
+			return false;
 		}
 		
 		boolean valor = verificarValoresVarivael(premissa);
@@ -202,7 +229,7 @@ public class Motor implements Serializable {
 				respostaVariavel.setSelecionado(false);
 			}
 		}
-		resultado = "Árvore da consulta:";
+		resultado = "";
 	}
 	
 	public List<Variavel> getVariaveis() {
@@ -227,6 +254,14 @@ public class Motor implements Serializable {
 
 	public void setResultado(String resultado) {
 		this.resultado = resultado;
+	}
+
+	public boolean isObjetivo() {
+		return objetivo;
+	}
+
+	public void setObjetivo(boolean objetivo) {
+		this.objetivo = objetivo;
 	}
 
 	public static Motor getInstancia() {

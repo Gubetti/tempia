@@ -22,6 +22,7 @@ import javax.swing.table.AbstractTableModel;
 import persistence.Persistir;
 import model.Motor;
 import model.Regra;
+import model.Sentenca;
 
 public class TelaPrincipal {
 
@@ -107,6 +108,27 @@ public class TelaPrincipal {
 					JOptionPane.showMessageDialog(null, "Insira algumas regras!", "Aviso", JOptionPane.WARNING_MESSAGE);
 					return;
 				}
+				
+				boolean objetivo = false;
+				for(Regra regra : Motor.getInstancia().getRegras()) {
+					for(Sentenca premissa : regra.getPremissas()) {
+						if(premissa.getVariavel().isObjetivo()) {
+							objetivo = true;
+							break;
+						}
+					}
+					
+					for(Sentenca conclusao : regra.getConclusoes()) {
+						if(conclusao.getVariavel().isObjetivo()) {
+							objetivo = true;
+							break;
+						}
+					}
+				}
+				if(!objetivo) {
+					JOptionPane.showMessageDialog(null, "Nenhuma regra possui um objetivo, logo a consulta não terá um resultado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+				}
+				
 				Motor.getInstancia().executar();
 			}
 		});
