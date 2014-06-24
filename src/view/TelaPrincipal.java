@@ -111,7 +111,7 @@ public class TelaPrincipal {
 		panel_2.setLayout(null);
 		
 		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(0, 55, 92, 125);
+		panel_3.setBounds(0, 33, 92, 125);
 		panel_2.add(panel_3);
 		
 		JButton btnInserir = new JButton("Inserir");
@@ -138,6 +138,34 @@ public class TelaPrincipal {
 			}
 		});
 		panel_3.add(btnExcluir);
+		
+		JPanel panel_4 = new JPanel();
+		panel_4.setBounds(23, 169, 45, 71);
+		panel_2.add(panel_4);
+		
+		JButton btnPraCima = new JButton("\u02C4");
+		btnPraCima.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (table.getSelectedRow() > -1) {
+					if (((RegraTableModel) table.getModel()).trocarLugarRegra(0, table.getSelectedRow())) {
+						table.setRowSelectionInterval(table.getSelectedRow() - 1, table.getSelectedRow() - 1);
+					}
+				}
+			}
+		});
+		panel_4.add(btnPraCima);
+		
+		JButton buttonPraBaixo = new JButton("\u02C5");
+		buttonPraBaixo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (table.getSelectedRow() > -1) {
+					if (((RegraTableModel) table.getModel()).trocarLugarRegra(2, table.getSelectedRow())) {
+						table.setRowSelectionInterval(table.getSelectedRow() + 1, table.getSelectedRow() + 1);
+					}
+				}
+			}
+		});
+		panel_4.add(buttonPraBaixo);
 		estadoBotoes();
 	}	
 	
@@ -208,7 +236,7 @@ class RegraTableModel extends AbstractTableModel{
 
 	@Override
 	public Object getValueAt(int row, int columnIndex) {
-		String descricao = "Regra " + (Motor.getInstancia().getRegras().indexOf(regras.get(row)) + 1);				
+		String descricao = "Regra " + (Motor.getInstancia().getRegras().indexOf(regras.get(row)) + 1);
 		
 		if(!regras.get(row).getDescricao().trim().equalsIgnoreCase("")) {
 			descricao += ": " + regras.get(row).getDescricao().trim();
@@ -232,6 +260,36 @@ class RegraTableModel extends AbstractTableModel{
 
 	public void notificarInsercao() {
 		fireTableRowsInserted(regras.size() - 1, regras.size() - 1);
+	}
+	
+	// 0 = pra cima, 1 = pra baixo, Verdadeiro se conseguiu trocar
+	public boolean trocarLugarRegra(int sentido, int linha) {
+		if (regras.size() > 1) {
+			if (sentido == 0) {
+				try {
+					Regra seraMenor = regras.get(linha);
+					Regra seraMaior = regras.get(linha - 1);
+					regras.set(linha, seraMaior);
+					regras.set(linha - 1, seraMenor);
+					fireTableRowsUpdated(linha - 1, linha);
+					return true;
+				} catch (IndexOutOfBoundsException e) {
+					JOptionPane.showMessageDialog(null, "Essa já é a primeira regra.", "Aviso", JOptionPane.WARNING_MESSAGE);
+				}
+			} else {
+				try {
+					Regra seraMenor = regras.get(linha + 1);
+					Regra seraMaior = regras.get(linha);
+					regras.set(linha, seraMenor);
+					regras.set(linha + 1, seraMaior);
+					fireTableRowsUpdated(linha, linha + 1);
+					return true;
+				} catch (IndexOutOfBoundsException e) {
+					JOptionPane.showMessageDialog(null, "Essa já é a última regra.", "Aviso", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		}
+		return false;
 	}
 	
 	public Regra getRegra(int row) {
