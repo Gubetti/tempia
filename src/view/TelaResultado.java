@@ -10,10 +10,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Color;
+import java.awt.SystemColor;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.JTextField;
 
 public class TelaResultado extends JDialog {
 
 	private JTable tableValores;
+	private JTextField txtTes;
 	
 	/**
 	 * Launch the application.
@@ -52,18 +58,31 @@ public class TelaResultado extends JDialog {
 		tabbedPane.addTab("Resultado", panelResultado);
 		panelResultado.setLayout(null);
 		
-		JTextArea textAreaResultado = new JTextArea();
-		textAreaResultado.setBounds(0, 0, panelResultado.getWidth(), panelResultado.getHeight() - 30);
-		panelResultado.add(textAreaResultado);
+		JLabel lblConsulta = new JLabel("Consulta:");
+		lblConsulta.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblConsulta.setBounds(165, 39, 46, 14);
+		lblConsulta.setSize(lblConsulta.getPreferredSize());
+		panelResultado.add(lblConsulta);
+		
+		txtTes = new JTextField();
+		txtTes.setEnabled(false);
+		txtTes.setEditable(false);
+		txtTes.setBounds(83, 75, 260, 25);
+		panelResultado.add(txtTes);
+		txtTes.setColumns(10);
 
 		JPanel panelArvore = new JPanel();
 		panelArvore.setBounds(0, 0, tabbedPane.getWidth(), tabbedPane.getHeight());
 		tabbedPane.addTab("Árvore de Pesquisa", panelArvore);
 		panelArvore.setLayout(null);
 		
-		JTextArea textAreaArvore = new JTextArea();
-		textAreaArvore.setBounds(0, 0, panelArvore.getWidth(), panelArvore.getHeight() - 30);
-		panelArvore.add(textAreaArvore);
+		JTextArea textArea = new JTextArea();
+		textArea.setEditable(false);
+		textArea.setBounds(0, 0, 4, 22);
+		textArea.setSize(textArea.getPreferredSize());
+		JScrollPane scrollPaneArvore = new JScrollPane(textArea);
+		scrollPaneArvore.setBounds(0, 0, tabbedPane.getWidth(), tabbedPane.getHeight() - 30);
+		panelArvore.add(scrollPaneArvore);		
 		
 		JPanel panelValores = new JPanel();
 		panelValores.setBounds(0, 0, tabbedPane.getWidth(), tabbedPane.getHeight());
