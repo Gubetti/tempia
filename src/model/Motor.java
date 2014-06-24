@@ -61,8 +61,8 @@ public class Motor {
 		if(!objetivo) {
 			
 		}
-		limparRespostas();
 		System.out.println(resultado);
+		limparRespostas();
 	}
 	
 	private boolean variavelResultado(Sentenca premissa, String descricaoRegra, int ordem) {
@@ -200,6 +200,7 @@ public class Motor {
 				respostaVariavel.setSelecionado(false);
 			}
 		}
+		resultado = "Árvore da consulta:";
 	}
 	
 	public List<Variavel> getVariaveis() {
