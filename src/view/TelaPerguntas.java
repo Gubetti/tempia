@@ -75,8 +75,6 @@ public class TelaPerguntas extends JDialog {
 		int yPanelBotoes = alturaPanelPergunta + alturaPanelRespostas;
 		int alturaBotao = 23;
 		int larguraBotao = 89;
-		int xBotaoOk = (larguraMaxima - larguraBotao) / 2;
-		int yBotaoOk = (alturaPanelBotoes - alturaBotao) / 2;
 		int espacamentoValor = 15;
 		int alturaLblValor = 14;
 		int larguraLblValor = 33;
@@ -242,8 +240,19 @@ public class TelaPerguntas extends JDialog {
 				
 			}
 		});
-		btnOk.setBounds(xBotaoOk, yBotaoOk, larguraBotao, alturaBotao);
+		btnOk.setBounds(90, 18, larguraBotao, alturaBotao);
 		panelBotoes.add(btnOk);
+		
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Motor.getInstancia().setCancelado(true);
+				dispose();
+				JOptionPane.showMessageDialog(null, "Execução cancelada.", "Aviso", JOptionPane.WARNING_MESSAGE);
+			}
+		});
+		btnCancelar.setBounds(369, 18, 89, 23);
+		panelBotoes.add(btnCancelar);
 		
 		this.setLocationRelativeTo(null);
 	}

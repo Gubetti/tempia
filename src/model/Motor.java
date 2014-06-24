@@ -14,6 +14,7 @@ public class Motor implements Serializable {
 	private List<Regra> regras;
 	private String resultado = ""; // Onde será escrito a "árvore"
 	private boolean objetivo = false;
+	private boolean cancelado = false;
 	private static Motor instancia;
 	
 	private Motor() {
@@ -24,7 +25,7 @@ public class Motor implements Serializable {
 	public void executar() {
 		objetivo = false;
 		for (Regra regra : regras) {
-			if (!objetivo) {
+			if (!objetivo && !cancelado) {
 				if(!resultado.equalsIgnoreCase("")) {
 					resultado += "\n\n";
 				}
@@ -73,7 +74,7 @@ public class Motor implements Serializable {
 			}
 		}
 		// Instanciar árvore e valores das variáveis. Se chegou aqui, não alcançou nenhum objetivo.
-		if(!objetivo) {
+		if(!objetivo && !cancelado) {
 			new TelaResultado("Não foi atingido nenhum objetivo.").setVisible(true);
 		}
 		System.out.println(resultado);
@@ -99,6 +100,10 @@ public class Motor implements Serializable {
 				}
 			}
 			new TelaResultado(resultado).setVisible(true);
+			return false;
+		}
+		
+		if(cancelado) {
 			return false;
 		}
 		
@@ -230,6 +235,7 @@ public class Motor implements Serializable {
 			}
 		}
 		resultado = "";
+		cancelado = false;
 	}
 	
 	public List<Variavel> getVariaveis() {
@@ -262,6 +268,14 @@ public class Motor implements Serializable {
 
 	public void setObjetivo(boolean objetivo) {
 		this.objetivo = objetivo;
+	}
+
+	public boolean isCancelado() {
+		return cancelado;
+	}
+
+	public void setCancelado(boolean cancelado) {
+		this.cancelado = cancelado;
 	}
 
 	public static Motor getInstancia() {
