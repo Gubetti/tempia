@@ -1,8 +1,11 @@
 package model;
 
+import java.io.Serializable;
 
-public class Sentenca {
 
+public class Sentenca implements Serializable {
+
+	private static final long serialVersionUID = 6073823444652606993L;
 	private Variavel variavel;
 	private String valorSelecao;
 	private Operador operadorSelecionado;

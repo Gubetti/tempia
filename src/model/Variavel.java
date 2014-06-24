@@ -1,10 +1,12 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Variavel {
+public class Variavel implements Serializable {
 
+	private static final long serialVersionUID = 324954546628272427L;
 	private String nome;
 	private String pergunta;
 	private boolean objetivo;

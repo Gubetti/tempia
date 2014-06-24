@@ -1,7 +1,10 @@
 package model;
 
-public class RespostaVariavel {
+import java.io.Serializable;
 
+public class RespostaVariavel implements Serializable{
+
+	private static final long serialVersionUID = 1734857364085987324L;
 	private String valor;
 	private boolean selecionado;
 	

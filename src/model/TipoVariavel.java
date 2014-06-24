@@ -1,5 +1,7 @@
 package model;
 
-public enum TipoVariavel {
+import java.io.Serializable;
+
+public enum TipoVariavel implements Serializable {
 	UNIVALORADO, MULTIVALORADO, NUMERICO;
 }

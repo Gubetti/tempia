@@ -1,6 +1,8 @@
 package model;
 
-public enum Operador {
+import java.io.Serializable;
+
+public enum Operador implements Serializable {
 	IGUAL, DIFERENTE, MAIOR_QUE, MENOR_QUE, MAIOR_IGUAL, MENOR_IGUAL;
 	
     @Override

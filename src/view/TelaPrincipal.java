@@ -4,18 +4,22 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 
+import persistence.Persistir;
 import model.Motor;
 import model.Regra;
 
@@ -27,6 +31,7 @@ public class TelaPrincipal {
 	private JButton btnExcluir;
 	private JButton btnPraCima;
 	private JButton btnPraBaixo;
+	private JFileChooser jFileChooser;
 	private static TelaPrincipal instancia;
 
 	/**
@@ -62,6 +67,9 @@ public class TelaPrincipal {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		jFileChooser = new JFileChooser();
+		jFileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos MOTINF", "motinf"));  
+		jFileChooser.setAcceptAllFileFilterUsed(false);
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(0, 0, 105, 266);
@@ -69,9 +77,19 @@ public class TelaPrincipal {
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JButton btnAbrirArquivo = new JButton("Abrir Base");
+		btnAbrirArquivo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				abrirArquivo();
+			}
+		});
 		panel.add(btnAbrirArquivo);
 		
 		JButton btnSalvarArquivo = new JButton("Salvar Base");
+		btnSalvarArquivo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				salvarArquivo();
+			}
+		});
 		panel.add(btnSalvarArquivo);
 		
 		JButton btnVariveis = new JButton("Vari\u00E1veis");
@@ -187,6 +205,9 @@ public class TelaPrincipal {
 			if(Motor.getInstancia().getRegras().size() > 1) {
 				btnPraCima.setEnabled(true);
 				btnPraBaixo.setEnabled(true);
+			} else {
+				btnPraCima.setEnabled(false);
+				btnPraBaixo.setEnabled(false);
 			}
 		} else {
 			btnEditar.setEnabled(false);
@@ -211,6 +232,32 @@ public class TelaPrincipal {
 			estadoBotoes();
 		} catch(Exception exception) {
 			JOptionPane.showMessageDialog(null, "Selecione a regra que você deseja remover.", "Aviso", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+
+	private void salvarArquivo() {
+		if (jFileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+	       	if (!jFileChooser.getSelectedFile().getAbsolutePath().endsWith(".motinf"))  {
+	       		jFileChooser.setSelectedFile(new File(jFileChooser.getSelectedFile().getAbsolutePath() + ".motinf")); 
+	       	}
+			Persistir.salvar(jFileChooser.getSelectedFile());
+		}
+	}
+	
+	private void abrirArquivo() {
+		if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if(jFileChooser.getSelectedFile().exists()) {
+				if(Persistir.abrir(jFileChooser.getSelectedFile())) {
+					((RegraTableModel) table.getModel()).setRegras(Motor.getInstancia().getRegras());
+					atualizarTabelaRegras();
+				} else {
+					jFileChooser.setSelectedFile(null);
+					JOptionPane.showMessageDialog(null, "Arquivo inválido!", "Aviso", JOptionPane.WARNING_MESSAGE);
+				}
+			} else {
+				jFileChooser.setSelectedFile(null);
+				JOptionPane.showMessageDialog(null, "Arquivo inexistente!", "Aviso", JOptionPane.WARNING_MESSAGE);
+			}
 		}
 	}
 	
@@ -304,5 +351,9 @@ class RegraTableModel extends AbstractTableModel{
 	
 	public Regra getRegra(int row) {
 		return regras.get(row);
+	}
+	
+	public void setRegras(List<Regra> regras) {
+		this.regras = regras;
 	}
 }

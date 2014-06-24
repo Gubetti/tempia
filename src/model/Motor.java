@@ -1,12 +1,14 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import view.TelaPerguntas;
 
-public class Motor {
-
+public class Motor implements Serializable {
+	
+	private static final long serialVersionUID = 3526380291018246832L;
 	private List<Variavel> variaveis;
 	private List<Regra> regras;
 	private String resultado = "Árvore da consulta:"; // Onde será escrito a "árvore"
