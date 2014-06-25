@@ -65,7 +65,10 @@ public class TelaPerguntas extends JDialog {
 		setModal(true);
 		int larguraMaxima = 500 - 8;
 		int alturaPanelPergunta = 50;
-		int qtdRespostas = premissa.getVariavel().getRespostas().size();
+		int qtdRespostas = 2;
+		if(premissa.getVariavel().getTipo() != TipoVariavel.NUMERICO) {
+			qtdRespostas = premissa.getVariavel().getRespostas().size();
+		}
 		int espacamentoRespostas = 1;
 		int alturaRespIndividual = 23;
 		int borda = 40;
