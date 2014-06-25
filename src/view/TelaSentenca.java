@@ -119,7 +119,7 @@ public class TelaSentenca extends JDialog {
 				cbVariavel.setSelectedItem(sentencaEditar.getVariavel());
 				cbOperador.setSelectedItem(sentencaEditar.getOperadorSelecionado());
 				for(RespostaVariavel respostaVariavel : variavelSelecionada.getRespostas()) {
-					if(respostaVariavel.getValor().equals(sentencaEditar.getValorSelecao())) {
+					if(respostaVariavel.equals(sentencaEditar.getValorSelecao())) {
 						cbValores.setSelectedItem(respostaVariavel);
 						break;
 					}
