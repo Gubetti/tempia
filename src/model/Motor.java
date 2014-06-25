@@ -48,7 +48,7 @@ public class Motor implements Serializable {
 					// Realizar conclusões, e lembrar que se uma variável for objetivo, encerrar
 					for (Sentenca conclusao : regra.getConclusoes()) {
 						for (RespostaVariavel respostaVariavel : conclusao.getVariavel().getRespostas()) {
-							if(respostaVariavel.getValor().equalsIgnoreCase(conclusao.getValorSelecao())) {
+							if(respostaVariavel.equals(conclusao.getValorSelecao())) {
 								respostaVariavel.setSelecionado(true);
 								resultado += "\nVariável " + conclusao.getVariavel().getNome() + " é IGUAL a "  + respostaVariavel.getValor() + ".";
 							} else if(conclusao.getVariavel().getTipo() != TipoVariavel.MULTIVALORADO && respostaVariavel.isSelecionado()) {
@@ -124,23 +124,23 @@ public class Motor implements Serializable {
 	}
 	
 	private boolean verificarValoresVarivael(Sentenca premissa) {
-		List<String> respostaSelecionadas = new ArrayList<String>(); // Por causa do diferente com multivalorado
+		List<RespostaVariavel> respostaSelecionadas = new ArrayList<RespostaVariavel>(); // Por causa do diferente com multivalorado
 		for(RespostaVariavel respostaVariavel : premissa.getVariavel().getRespostas()) {
 			if(respostaVariavel.isSelecionado()) {	
 				int valorVariavel = 0, valorSentenca = 0;
 				if(premissa.getVariavel().getTipo() == TipoVariavel.NUMERICO) {
 					valorVariavel = Integer.parseInt(respostaVariavel.getValor());
-					valorSentenca = Integer.parseInt(premissa.getValorSelecao());	
+					valorSentenca = Integer.parseInt(premissa.getValorSelecao().getValor());	
 				}
 				
 				switch (premissa.getOperadorSelecionado()) {
 				case IGUAL:
-					if(respostaVariavel.getValor().equalsIgnoreCase(premissa.getValorSelecao())) {
+					if(respostaVariavel.equals(premissa.getValorSelecao())) {
 						return true;
 					}
 					break;
 				case DIFERENTE:
-					respostaSelecionadas.add(respostaVariavel.getValor());
+					respostaSelecionadas.add(respostaVariavel);
 					break;
 				case MAIOR_IGUAL:
 					if(valorVariavel >= valorSentenca) {
@@ -167,8 +167,8 @@ public class Motor implements Serializable {
 		}
 		
 		if (!respostaSelecionadas.isEmpty()) {
-			for (String valor : respostaSelecionadas) {
-				if (valor.equalsIgnoreCase(premissa.getValorSelecao())) {
+			for (RespostaVariavel valor : respostaSelecionadas) {
+				if (valor.equals(premissa.getValorSelecao())) {
 					return false;
 				}
 			}
@@ -330,11 +330,11 @@ public class Motor implements Serializable {
 		
 		Sentenca premissa1 = new Sentenca(v1);
 		premissa1.setOperadorSelecionado(Operador.IGUAL);
-		premissa1.setValorSelecao(v1.getRespostas().get(0).getValor());
+		premissa1.setValorSelecao(v1.getRespostas().get(0));
 		
 		Sentenca conclusao1 = new Sentenca(con1);
 		conclusao1.setOperadorSelecionado(Operador.IGUAL);
-		conclusao1.setValorSelecao(con1.getRespostas().get(0).getValor());
+		conclusao1.setValorSelecao(con1.getRespostas().get(0));
 		
 		Regra regra1 = new Regra();
 		regra1.getPremissas().add(premissa1);
@@ -343,15 +343,15 @@ public class Motor implements Serializable {
 		
 		Sentenca premissa2 = new Sentenca(v1);
 		premissa2.setOperadorSelecionado(Operador.IGUAL);
-		premissa2.setValorSelecao(v1.getRespostas().get(2).getValor());
+		premissa2.setValorSelecao(v1.getRespostas().get(2));
 		
 		Sentenca premissa3 = new Sentenca(v2);
 		premissa3.setOperadorSelecionado(Operador.DIFERENTE);
-		premissa3.setValorSelecao(v2.getRespostas().get(1).getValor());
+		premissa3.setValorSelecao(v2.getRespostas().get(1));
 		
 		Sentenca conclusao2 = new Sentenca(con1);
 		conclusao2.setOperadorSelecionado(Operador.IGUAL);
-		conclusao2.setValorSelecao(con1.getRespostas().get(1).getValor());
+		conclusao2.setValorSelecao(con1.getRespostas().get(1));
 		
 		Regra regra2 = new Regra();
 		regra2.setDescricao("Teste de nome de regra");
@@ -362,11 +362,11 @@ public class Motor implements Serializable {
 		
 		Sentenca premissa4 = new Sentenca(con1);
 		premissa4.setOperadorSelecionado(Operador.IGUAL);
-		premissa4.setValorSelecao(con1.getRespostas().get(0).getValor());
+		premissa4.setValorSelecao(con1.getRespostas().get(0));
 		
 		Sentenca conclusaoObjetivo1 = new Sentenca(obj);
 		conclusaoObjetivo1.setOperadorSelecionado(Operador.IGUAL);
-		conclusaoObjetivo1.setValorSelecao(obj.getRespostas().get(0).getValor());
+		conclusaoObjetivo1.setValorSelecao(obj.getRespostas().get(0));
 		
 		Regra regraObjetivo1 = new Regra();
 		regraObjetivo1.getPremissas().add(premissa4);
@@ -375,11 +375,11 @@ public class Motor implements Serializable {
 		
 		Sentenca premissa5 = new Sentenca(con1);
 		premissa5.setOperadorSelecionado(Operador.IGUAL);
-		premissa5.setValorSelecao(con1.getRespostas().get(1).getValor());
+		premissa5.setValorSelecao(con1.getRespostas().get(1));
 		
 		Sentenca conclusaoObjetivo2 = new Sentenca(obj);
 		conclusaoObjetivo2.setOperadorSelecionado(Operador.IGUAL);
-		conclusaoObjetivo2.setValorSelecao(obj.getRespostas().get(1).getValor());
+		conclusaoObjetivo2.setValorSelecao(obj.getRespostas().get(1));
 
 		Regra regraObjetivo2 = new Regra();
 		regraObjetivo2.getPremissas().add(premissa5);

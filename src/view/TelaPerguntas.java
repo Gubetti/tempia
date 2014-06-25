@@ -217,7 +217,7 @@ public class TelaPerguntas extends JDialog {
 					}
 					break;
 				case NUMERICO:
-					valorSelecao.add(textField.getSelectedText());
+					valorSelecao.add(textField.getText());
 				}
 
 				if(!valorSelecao.isEmpty()) {

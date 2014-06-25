@@ -7,14 +7,14 @@ public class Sentenca implements Serializable {
 
 	private static final long serialVersionUID = 6073823444652606993L;
 	private Variavel variavel;
-	private String valorSelecao;
+	private RespostaVariavel valorSelecao;
 	private Operador operadorSelecionado;
 
 	public Sentenca(Variavel variavel) {
 		this.variavel = variavel;
 	}
 	
-	public void gravar(String valorSelecao, Operador operadorSelecionado) {
+	public void gravar(RespostaVariavel valorSelecao, Operador operadorSelecionado) {
 		this.valorSelecao = valorSelecao;
 		this.operadorSelecionado = operadorSelecionado;
 	}
@@ -27,11 +27,11 @@ public class Sentenca implements Serializable {
 		this.variavel = variavel;
 	}
 
-	public String getValorSelecao() {
+	public RespostaVariavel getValorSelecao() {
 		return valorSelecao;
 	}
 
-	public void setValorSelecao(String valorSelecao) {
+	public void setValorSelecao(RespostaVariavel valorSelecao) {
 		this.valorSelecao = valorSelecao;
 	}
 

@@ -232,17 +232,21 @@ public class TelaVariavel extends JDialog {
 		try {
 			RespostaVariavelTableModel modelo = (RespostaVariavelTableModel) table.getModel();
 			if(variavelEditar != null) {
-				String texto = variavelEditar.verificarValorUsado(modelo.getRespostaVariavel(linha).getValor());
+				String texto = variavelEditar.verificarValorUsado(modelo.getRespostaVariavel(linha));
 				if(!texto.equalsIgnoreCase("")) {
 					int aviso = JOptionPane.showConfirmDialog(null, "O valor " + modelo.getRespostaVariavel(linha).getValor() + " está sendo usada na(s) seguinte(s) regra(s):\n" 
 							+ texto + "\nSe prosseguir, a(s) regra(s) acima serão excluídas.\nDeseja continuar?", "Aviso", JOptionPane.ERROR_MESSAGE);
 					if(aviso == 0) {
-						variavelEditar.removerValor(modelo.getRespostaVariavel(linha).getValor());
+						variavelEditar.removerValor(modelo.getRespostaVariavel(linha));
+						modelo.removeRow(linha);
 						TelaPrincipal.getInstancia().atualizarTabelaRegras();
 					}
+				} else {
+					modelo.removeRow(linha);
 				}
+			} else {
+				modelo.removeRow(linha);
 			}
-			modelo.removeRow(linha);
 	
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Selecione a linha que você deseja remover.", "Aviso", JOptionPane.WARNING_MESSAGE);

@@ -83,6 +83,7 @@ public class TelaPrincipal {
 				abrirArquivo();
 			}
 		});
+		//btnAbrirArquivo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/abrir.png"))); 
 		panel.add(btnAbrirArquivo);
 		
 		JButton btnSalvarArquivo = new JButton("Salvar Base");

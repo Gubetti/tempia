@@ -119,7 +119,7 @@ public class TelaSentenca extends JDialog {
 				cbVariavel.setSelectedItem(sentencaEditar.getVariavel());
 				cbOperador.setSelectedItem(sentencaEditar.getOperadorSelecionado());
 				for(RespostaVariavel respostaVariavel : variavelSelecionada.getRespostas()) {
-					if(respostaVariavel.getValor().equalsIgnoreCase(sentencaEditar.getValorSelecao())) {
+					if(respostaVariavel.getValor().equals(sentencaEditar.getValorSelecao())) {
 						cbValores.setSelectedItem(respostaVariavel);
 						break;
 					}
@@ -134,7 +134,7 @@ public class TelaSentenca extends JDialog {
 		if(sentencaEditar == null) {
 			Sentenca sentenca = new Sentenca((Variavel) cbVariavel.getSelectedItem());
 			sentenca.setOperadorSelecionado((Operador)cbOperador.getSelectedItem());
-			sentenca.setValorSelecao(cbValores.getSelectedItem().toString());
+			sentenca.setValorSelecao((RespostaVariavel) cbValores.getSelectedItem());
 			if(premissa) {
 				regra.getPremissas().add(sentenca);
 			} else {
@@ -143,7 +143,7 @@ public class TelaSentenca extends JDialog {
 		} else {
 			sentencaEditar.setVariavel((Variavel) cbVariavel.getSelectedItem());
 			sentencaEditar.setOperadorSelecionado((Operador)cbOperador.getSelectedItem());
-			sentencaEditar.setValorSelecao(cbValores.getSelectedItem().toString());
+			sentencaEditar.setValorSelecao((RespostaVariavel) cbValores.getSelectedItem());
 		}
 		telaSentencas.atualizarTabelas();
 		dispose();

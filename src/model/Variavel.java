@@ -48,18 +48,18 @@ public class Variavel implements Serializable {
 		return true;
 	}
 	
-	public String verificarValorUsado(String valor) {
+	public String verificarValorUsado(RespostaVariavel valor) {
 		String texto = "";
 		for(Regra regra : Motor.getInstancia().getRegras()) {
 			for(Sentenca premissa : regra.getPremissas()) {
-				if(premissa.getVariavel().equals(this) && premissa.getValorSelecao().equalsIgnoreCase(valor)) {
+				if(premissa.getVariavel().equals(this) && premissa.getValorSelecao().equals(valor)) {
 					texto += "\nRegra de ordem " + (Motor.getInstancia().getRegras().indexOf(regra) + 1) + ", na(s) premissa(s).";
 					break;
 				}
 			}
 			
 			for(Sentenca conclusao : regra.getConclusoes()) {
-				if(conclusao.getVariavel().equals(this) && conclusao.getValorSelecao().equalsIgnoreCase(valor)) {
+				if(conclusao.getVariavel().equals(this) && conclusao.getValorSelecao().equals(valor)) {
 					texto += "\nRegra de ordem " + (Motor.getInstancia().getRegras().indexOf(regra) + 1) + ", na(s) conclusão(ões).";
 					break;
 				}
@@ -68,9 +68,9 @@ public class Variavel implements Serializable {
 		return texto;
 	}
 	
-	public void removerValor(String valor) {
+	public void removerValor(RespostaVariavel valor) {
 		for(RespostaVariavel respostaVariavel : respostas) {
-			if(respostaVariavel.getValor().equalsIgnoreCase(valor)) {
+			if(respostaVariavel.getValor().equals(valor)) {
 				respostas.remove(respostaVariavel);
 				break;
 			}
@@ -79,13 +79,13 @@ public class Variavel implements Serializable {
 		List<Regra> regrasRemover = new ArrayList<Regra>();
 		for(Regra regra : Motor.getInstancia().getRegras()) {
 			for(Sentenca premissa : regra.getPremissas()) {
-				if(premissa.getValorSelecao().equalsIgnoreCase(valor)) {
+				if(premissa.getValorSelecao().equals(valor)) {
 					regrasRemover.add(regra);
 				}
 			}
 			
 			for(Sentenca conclusao : regra.getConclusoes()) {
-				if(conclusao.getValorSelecao().equalsIgnoreCase(valor)) {
+				if(conclusao.getValorSelecao().equals(valor)) {
 					regrasRemover.add(regra);
 				}
 			}
