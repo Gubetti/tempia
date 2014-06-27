@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -69,6 +70,7 @@ public class TelaPrincipal {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.getContentPane().setLayout(null);
+		frame.setIconImage(new ImageIcon(getClass().getResource("/res/iconeLampada.png")).getImage());
 		jFileChooser = new JFileChooser();
 		jFileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos MOTINF", "motinf"));  
 		jFileChooser.setAcceptAllFileFilterUsed(false);

@@ -10,6 +10,7 @@ public class Variavel implements Serializable {
 	private String nome;
 	private String pergunta;
 	private boolean objetivo;
+	private boolean naoPerguntar;
 	private TipoVariavel tipo;
 	private List<Operador> operadores;
 	private List<RespostaVariavel> respostas;
@@ -22,6 +23,7 @@ public class Variavel implements Serializable {
 		inserirOperadores();
 		this.respostas = new ArrayList<RespostaVariavel>();
 		this.pergunta = "";
+		this.naoPerguntar = false;
 	}
 
 	private void inserirOperadores() {
@@ -120,6 +122,14 @@ public class Variavel implements Serializable {
 		this.objetivo = objetivo;
 	}
 	
+	public boolean isNaoPerguntar() {
+		return naoPerguntar;
+	}
+
+	public void setNaoPerguntar(boolean naoPerguntar) {
+		this.naoPerguntar = naoPerguntar;
+	}
+
 	public TipoVariavel getTipo() {
 		return tipo;
 	}

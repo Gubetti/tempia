@@ -83,10 +83,15 @@ public class Motor implements Serializable {
 	
 	private boolean variavelResultado(Sentenca premissa, String descricaoRegra, int ordem) {
 		if(!verificarVariavelSelecionada(premissa)) {
-			// Tela para perguntar valor(es) da variavel da premissa
-			resultado += "\nPerguntando ao usuário o valor da variável " + premissa.getVariavel().getNome() + ".";
-			TelaPerguntas pergunta = new TelaPerguntas(premissa, descricaoRegra, ordem);
-			pergunta.setVisible(true);
+			if(!premissa.getVariavel().isNaoPerguntar()) {
+				// Tela para perguntar valor(es) da variavel da premissa
+				resultado += "\nPerguntando ao usuário o valor da variável " + premissa.getVariavel().getNome() + ".";
+				TelaPerguntas pergunta = new TelaPerguntas(premissa, descricaoRegra, ordem);
+				pergunta.setVisible(true);				
+			} else {
+				resultado += "\nNão foi possível realizar as conclusões da regra, pois a variável " + premissa.getVariavel().getNome() + " NÃO possui um valor inferido, e ela não deve ser perguntada ao usuário.";
+				return false;
+			}
 		}
 		
 		if(objetivo) {

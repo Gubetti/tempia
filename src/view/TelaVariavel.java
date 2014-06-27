@@ -34,6 +34,7 @@ public class TelaVariavel extends JDialog {
 	private JTextField txtPergunta;
 	private final List<JRadioButton> jRadioList = new ArrayList<JRadioButton>();
 	private JCheckBox chckbxObjetvo;
+	private JCheckBox checkBoxNaoPerguntaProUsuario;
 	private JTable table;
 	private JButton btnInserir;
 	private JButton btnExcluir;
@@ -87,6 +88,7 @@ public class TelaVariavel extends JDialog {
 			jRadioButtonAtual = jRadioList.get(2);
 		}
 		chckbxObjetvo.setSelected(variavel.isObjetivo());
+		checkBoxNaoPerguntaProUsuario.setSelected(variavel.isNaoPerguntar());
 		RespostaVariavelTableModel modelo = (RespostaVariavelTableModel) table.getModel();
 		
 		if(variavel.getTipo() != TipoVariavel.NUMERICO) {
@@ -222,7 +224,7 @@ public class TelaVariavel extends JDialog {
 		chckbxObjetvo.setBounds(341, 121, 74, 23);
 		getContentPane().add(chckbxObjetvo);
 		
-		JCheckBox checkBoxNaoPerguntaProUsuario = new JCheckBox("N\u00E3o perguntar vari\u00E1vel para o usu\u00E1rio");
+		checkBoxNaoPerguntaProUsuario = new JCheckBox("N\u00E3o perguntar vari\u00E1vel para o usu\u00E1rio");
 		checkBoxNaoPerguntaProUsuario.setBounds(64, 80, 97, 23);
 		checkBoxNaoPerguntaProUsuario.setSize(checkBoxNaoPerguntaProUsuario.getPreferredSize());
 		getContentPane().add(checkBoxNaoPerguntaProUsuario);
@@ -315,6 +317,7 @@ public class TelaVariavel extends JDialog {
 		if(variavelEditar == null) {
 			variavelEditar = new Variavel(txtNome.getText().trim().toLowerCase(), chckbxObjetvo.isSelected(), tipoVariavel);
 			variavelEditar.setPergunta(txtPergunta.getText().trim());
+			variavelEditar.setNaoPerguntar(checkBoxNaoPerguntaProUsuario.isSelected());
 			if(tipoVariavel != TipoVariavel.NUMERICO) {
 				for (int i = 0; i <  modelo.getValores().size(); i++) {
 					variavelEditar.inserirValor(modelo.getValores().get(i));
@@ -354,6 +357,7 @@ public class TelaVariavel extends JDialog {
 			variavelEditar.setNome(txtNome.getText());
 			variavelEditar.setPergunta(txtPergunta.getText());
 			variavelEditar.setObjetivo(chckbxObjetvo.isSelected());
+			variavelEditar.setNaoPerguntar(checkBoxNaoPerguntaProUsuario.isSelected());
 			variavelEditar.setTipo(tipoVariavel);
 			for(RespostaVariavel respostaVariavel : modelo.getValores()) {
 				for(RespostaVariavel valor : modelo.getValores()) {
