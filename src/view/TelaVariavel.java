@@ -219,8 +219,13 @@ public class TelaVariavel extends JDialog {
 		panel_2.add(btnExcluir);
 		
 		chckbxObjetvo = new JCheckBox("Objetvo");
-		chckbxObjetvo.setBounds(119, 80, 97, 23);
+		chckbxObjetvo.setBounds(341, 121, 74, 23);
 		getContentPane().add(chckbxObjetvo);
+		
+		JCheckBox checkBoxNaoPerguntaProUsuario = new JCheckBox("N\u00E3o perguntar vari\u00E1vel para o usu\u00E1rio");
+		checkBoxNaoPerguntaProUsuario.setBounds(64, 80, 97, 23);
+		checkBoxNaoPerguntaProUsuario.setSize(checkBoxNaoPerguntaProUsuario.getPreferredSize());
+		getContentPane().add(checkBoxNaoPerguntaProUsuario);
 	}
 	
 	private void adicionarLinha(String valor) {
