@@ -65,15 +65,16 @@ public class TelaPrincipal {
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setTitle("Motor de inferência");
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 492, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
 		frame.getContentPane().setLayout(null);
 		jFileChooser = new JFileChooser();
 		jFileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos MOTINF", "motinf"));  
 		jFileChooser.setAcceptAllFileFilterUsed(false);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 105, 266);
+		panel.setBounds(0, 0, 147, 266);
 		frame.getContentPane().add(panel);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
@@ -83,7 +84,7 @@ public class TelaPrincipal {
 				abrirArquivo();
 			}
 		});
-		//btnAbrirArquivo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/abrir.png"))); 
+		btnAbrirArquivo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/abrir.png")));
 		panel.add(btnAbrirArquivo);
 		
 		JButton btnSalvarArquivo = new JButton("Salvar Base");
@@ -92,6 +93,7 @@ public class TelaPrincipal {
 				salvarArquivo();
 			}
 		});
+		btnSalvarArquivo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/salvar.png")));
 		panel.add(btnSalvarArquivo);
 		
 		JButton btnVariveis = new JButton("Vari\u00E1veis");
@@ -133,10 +135,11 @@ public class TelaPrincipal {
 				Motor.getInstancia().executar();
 			}
 		});
+		btnExecutar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/executar.png")));
 		panel.add(btnExecutar);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(104, 0, 247, 266);
+		panel_1.setBounds(147, 0, 247, 266);
 		frame.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -145,11 +148,11 @@ public class TelaPrincipal {
 		table.setBounds(10, 11, 1, 1);
 		table.setSize(table.getPreferredSize());
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(10, 10, panel_1.getWidth() - 20, panel_1.getHeight() - 20);
+		scrollPane.setBounds(0, 10, 237, 246);
 		panel_1.add(scrollPane);
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(350, 0, 92, 266);
+		panel_2.setBounds(394, 0, 92, 266);
 		frame.getContentPane().add(panel_2);
 		panel_2.setLayout(null);
 		
